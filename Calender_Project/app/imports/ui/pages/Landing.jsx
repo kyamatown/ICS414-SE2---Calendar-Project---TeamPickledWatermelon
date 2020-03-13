@@ -6,7 +6,7 @@ class Landing extends React.Component {
   render() {
     return (
         <div>
-            <Signin></Signin>
+            <Signin/>
         </div>
     );
   }
