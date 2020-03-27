@@ -57,9 +57,9 @@ You will see the website running at <a href="localhost:3000">localhost:3000</a>
 
 ### Other Dependencies:
 
-semantic-ui-calendar-react
+react-calendar
 
 ```
-npm i semantic-ui-calendar-react
+npm install react-calendar
 ```
 
