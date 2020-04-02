@@ -54,3 +54,12 @@ I20200304-16:16:23.452(-10)?   Adding: Boogie Board (admin@foo.com)
 ```
 
 You will see the website running at <a href="localhost:3000">localhost:3000</a> 
+
+### Other Dependencies:
+
+react-calendar
+
+```
+npm install react-calendar
+```
+
