@@ -1,4 +1,5 @@
 import React from 'react';
+import { fs } from 'fs';
 import { CalEvents } from '/imports/api/stuff/Stuff';
 import { Grid, Segment, Header, Form } from 'semantic-ui-react';
 import { AutoForm, ErrorsField, SelectField, SubmitField, TextField } from 'uniforms-semantic';
@@ -56,17 +57,44 @@ class AddEvent extends React.Component {
 
     createDateTime = (date) => {
         let dt = [];
+        let result;
         const today = new Date();
 
-        dt = dt.concat(date);
+        dt = dt.concat(date.toString());
         dt = dt.concat('T');
-        dt = dt.concat(today.getHours());
-        dt = dt.concat(today.getMinutes());
+        dt = dt.concat(today.getHours().toString());
+        dt = dt.concat(today.getMinutes().toString());
         dt = dt.concat('00');
         dt = dt.concat('Z');
-        console.log(dt);
-        return dt;
+
+        // eslint-disable-next-line prefer-const
+        result = dt.join('');
+
+        console.log(result);
+        return result.replace(/,/g, '');
     };
+
+    exportICS = (Summary, Class, start, end) => {
+        // eslint-disable-next-line global-require
+        const fileDownload = require('react-file-download');
+        const filename = 'export.ics';
+
+        let icsFile = 'BEGIN:VCALENDAR\n';
+        icsFile += 'VERSION:2.0\n';
+        icsFile += 'START:VTIMEZONE\n';
+        icsFile += 'TZID:Pacific/honolulu\n';
+        icsFile += 'END:VTIMEZONE\n';
+        icsFile += 'BEGIN:VEVENT\n';
+        icsFile += `SUMMARY:${Summary}\n`;
+        icsFile += `DTSTART:${start}\n`;
+        icsFile += `DTEND:${end}\n`;
+        icsFile += `CLASS:${Class}\n`;
+        icsFile += 'END:VEVENT\n';
+        icsFile += 'END:VCALENDAR';
+
+        fileDownload(icsFile, filename);
+    }
+
 
     /** On submit, insert the data. */
     submit(data) {
@@ -146,6 +174,12 @@ class AddEvent extends React.Component {
         const End_Date = this.createDateTime(endingDate);
 
         console.log(SUMMARY);
+        console.log(Start_Date);
+        console.log(End_Date);
+        console.log(CLASS);
+        console.log(owner);
+
+        this.exportICS(SUMMARY, CLASS, Start_Date, End_Date);
 
         CalEvents.insert({ SUMMARY, Start_Date, End_Date, CLASS, owner },
             (error) => {

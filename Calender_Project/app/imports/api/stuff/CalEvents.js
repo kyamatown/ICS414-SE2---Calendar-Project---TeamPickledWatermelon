@@ -7,11 +7,6 @@ const CalEvents = new Mongo.Collection('CalEvents');
 
 /** Define a shema to specify the structure of each documentation in the collection. */
 const CalEventsSchema = new SimpleSchema({
-    BEGIN: {
-        type: String,
-        optional: false,
-        defaultValue: 'BEGIN:VEVENT',
-    },
     SUMMARY: {
         type: String,
         optional: true,
@@ -31,11 +26,6 @@ const CalEventsSchema = new SimpleSchema({
         optional: false,
         allowedValues: ['PUBLIC', 'PRIVATE', 'CONFIDENTIAL'],
         defaultValue: 'PUBLIC',
-    },
-    END: {
-        type: String,
-        optional: false,
-        defaultValue: 'END:VEVENT',
     },
     owner: String,
 }, { tracker: Tracker });
