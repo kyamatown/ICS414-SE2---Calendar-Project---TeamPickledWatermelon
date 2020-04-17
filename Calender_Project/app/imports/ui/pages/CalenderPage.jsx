@@ -17,7 +17,7 @@ class CalenderPage extends React.Component {
         const padding = { paddingLeft: '300px', paddingTop: '20px' };
         return (
             <div>
-                <Grid columns={2}>
+                <Grid width='auto' columns={2}>
                     <Grid.Row comlums={2} centered>
                         <Grid.Column>
                             <AddEvent/>
@@ -26,7 +26,7 @@ class CalenderPage extends React.Component {
                             <Calendar
                                 onChange={this.onChange}
                                 value={this.state.date}
-                            />
+                            /> 
                         </Grid.Column>
                     </Grid.Row>
                 </Grid>

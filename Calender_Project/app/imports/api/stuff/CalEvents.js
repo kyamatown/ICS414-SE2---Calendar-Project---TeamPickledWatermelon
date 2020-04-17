@@ -27,7 +27,6 @@ const CalEventsSchema = new SimpleSchema({
         allowedValues: ['PUBLIC', 'PRIVATE', 'CONFIDENTIAL'],
         defaultValue: 'PUBLIC',
     },
-    owner: String,
 }, { tracker: Tracker });
 
 /** Attach this schema to the collection. */

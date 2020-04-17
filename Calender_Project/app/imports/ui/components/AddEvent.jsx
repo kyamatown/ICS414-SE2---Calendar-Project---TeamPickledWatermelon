@@ -1,6 +1,6 @@
 import React from 'react';
 import { fs } from 'fs';
-import { CalEvents } from '/imports/api/stuff/Stuff';
+import { CalEvents, CalEventsSchema } from '/imports/api/stuff/CalEvents';
 import { Grid, Segment, Header, Form } from 'semantic-ui-react';
 import { AutoForm, ErrorsField, SelectField, SubmitField, TextField } from 'uniforms-semantic';
 import swal from 'sweetalert';
@@ -11,7 +11,8 @@ import DatePicker from 'react-datepicker/es';
 import 'react-datepicker/dist/react-datepicker.css';
 
 /** Create a schema to specify the structure of the data to appear in the form. */
-const formSchema = new SimpleSchema({
+/*Using CalEventsSchema from CalEvents Does the same thing*/
+/*const formSchema = new SimpleSchema({
     BEGIN: {
         type: String,
         optional: false,
@@ -32,7 +33,7 @@ const formSchema = new SimpleSchema({
         optional: false,
         defaultValue: 'END:VEVENT',
     },
-});
+});*
 
 /** Renders the Page for adding a document. */
 class AddEvent extends React.Component {
@@ -74,9 +75,14 @@ class AddEvent extends React.Component {
         return result.replace(/,/g, '');
     };
 
-    exportICS = (Summary, Class, start, end) => {
+    exportICS = (CalEventsSchema) => {
+        state = {
+            events: []
+        };
+
+        //const CalEvents = this.state.events.map((CalEvents) => (<CalEvents key={events._id} events={events} />);
         // eslint-disable-next-line global-require
-        const fileDownload = require('react-file-download');
+        const fileDownload = require('js-file-download');
         const filename = 'export.ics';
 
         let icsFile = 'BEGIN:VCALENDAR\n';
@@ -84,12 +90,16 @@ class AddEvent extends React.Component {
         icsFile += 'START:VTIMEZONE\n';
         icsFile += 'TZID:Pacific/honolulu\n';
         icsFile += 'END:VTIMEZONE\n';
+        //icsFile += CalEvents;
+        icsFile += '\n'
+        /*
         icsFile += 'BEGIN:VEVENT\n';
         icsFile += `SUMMARY:${Summary}\n`;
         icsFile += `DTSTART:${start}\n`;
         icsFile += `DTEND:${end}\n`;
         icsFile += `CLASS:${Class}\n`;
         icsFile += 'END:VEVENT\n';
+        */
         icsFile += 'END:VCALENDAR';
 
         fileDownload(icsFile, filename);
@@ -179,7 +189,7 @@ class AddEvent extends React.Component {
         console.log(CLASS);
         console.log(owner);
 
-        this.exportICS(SUMMARY, CLASS, Start_Date, End_Date);
+        //this.exportICS(CalEventsSchema);
 
         CalEvents.insert({ SUMMARY, Start_Date, End_Date, CLASS, owner },
             (error) => {
@@ -199,7 +209,8 @@ class AddEvent extends React.Component {
                 <Grid.Column>
                     <Header as="h2" textAlign="center">Add Event</Header>
                     <AutoForm
-                        schema={formSchema}
+                        schema={CalEventsSchema}
+                        ref={(ref) => { this.formRef = ref; }}
                         onSubmit={data => this.submit(data)}
                     >
                         <Segment>
@@ -226,7 +237,8 @@ class AddEvent extends React.Component {
                                     { label: 'Confidential', value: 'CONFIDENTIAL' },
                                 ]}
                             />
-                            <SubmitField value='submit'/>
+                            <SubmitField value='submit' />
+                            <button value="exportICS" className="btn btn-primary">Export Calendar</button>
                             <ErrorsField/>
                         </Segment>
                     </AutoForm>
