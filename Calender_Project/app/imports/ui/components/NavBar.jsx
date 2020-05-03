@@ -14,6 +14,10 @@ class NavBar extends React.Component {
         <Menu.Item as={NavLink} activeClassName="" exact to="/">
           <Header inverted as='h1'>Pickled Calender</Header>
         </Menu.Item>
+            {this.props.currentUser ? (
+                [<Menu.Item as={NavLink} activeClassName="active" exact to="/add" key='add'>Add Event</Menu.Item>,
+                <Menu.Item as={NavLink} activeClassName="active" exact to="/list" key='list'>Event List</Menu.Item>]
+            ) : ''}
         <Menu.Item position="right">
           {this.props.currentUser !== '' ? (
             <Dropdown text={this.props.currentUser} pointing="top right" icon={'user'}>

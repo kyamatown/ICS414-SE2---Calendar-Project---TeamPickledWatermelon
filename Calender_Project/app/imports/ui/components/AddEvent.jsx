@@ -1,9 +1,10 @@
 import React from 'react';
 import { fs } from 'fs';
 import { CalEvents, CalEventsSchema } from '/imports/api/stuff/CalEvents';
-import { Grid, Segment, Header, Form } from 'semantic-ui-react';
+import { Grid, Segment, Header, Form, Table, Button } from 'semantic-ui-react';
 import { AutoForm, ErrorsField, SelectField, SubmitField, TextField } from 'uniforms-semantic';
 import swal from 'sweetalert';
+import PropTypes from 'prop-types';
 import 'uniforms-bridge-simple-schema-2';
 import { Meteor } from 'meteor/meteor';
 import SimpleSchema from 'simpl-schema';
@@ -53,8 +54,7 @@ class AddEvent extends React.Component {
         this.setState({
             endDate: date,
         });
-    };
-
+    };  
 
     createDateTime = (date) => {
         let dt = [];
@@ -74,37 +74,6 @@ class AddEvent extends React.Component {
         console.log(result);
         return result.replace(/,/g, '');
     };
-
-    exportICS = (CalEventsSchema) => {
-        state = {
-            events: []
-        };
-
-        //const CalEvents = this.state.events.map((CalEvents) => (<CalEvents key={events._id} events={events} />);
-        // eslint-disable-next-line global-require
-        const fileDownload = require('js-file-download');
-        const filename = 'export.ics';
-
-        let icsFile = 'BEGIN:VCALENDAR\n';
-        icsFile += 'VERSION:2.0\n';
-        icsFile += 'START:VTIMEZONE\n';
-        icsFile += 'TZID:Pacific/honolulu\n';
-        icsFile += 'END:VTIMEZONE\n';
-        //icsFile += CalEvents;
-        icsFile += '\n'
-        /*
-        icsFile += 'BEGIN:VEVENT\n';
-        icsFile += `SUMMARY:${Summary}\n`;
-        icsFile += `DTSTART:${start}\n`;
-        icsFile += `DTEND:${end}\n`;
-        icsFile += `CLASS:${Class}\n`;
-        icsFile += 'END:VEVENT\n';
-        */
-        icsFile += 'END:VCALENDAR';
-
-        fileDownload(icsFile, filename);
-    }
-
 
     /** On submit, insert the data. */
     submit(data) {
@@ -189,8 +158,6 @@ class AddEvent extends React.Component {
         console.log(CLASS);
         console.log(owner);
 
-        //this.exportICS(CalEventsSchema);
-
         CalEvents.insert({ SUMMARY, Start_Date, End_Date, CLASS, owner },
             (error) => {
                 if (error) {
@@ -199,7 +166,8 @@ class AddEvent extends React.Component {
                     swal('Success', 'Item added successfully', 'success');
                 }
             });
-    }
+    };
+
 
     /** Render the form. Use Uniforms: https://github.com/vazco/uniforms */
     render() {
@@ -238,7 +206,6 @@ class AddEvent extends React.Component {
                                 ]}
                             />
                             <SubmitField value='submit' />
-                            <button value="exportICS" className="btn btn-primary">Export Calendar</button>
                             <ErrorsField/>
                         </Segment>
                     </AutoForm>
