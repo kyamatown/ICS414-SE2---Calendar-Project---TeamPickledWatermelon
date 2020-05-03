@@ -3,20 +3,20 @@ import SimpleSchema from 'simpl-schema';
 import { Tracker } from 'meteor/tracker';
 
 /** Define a collection to hold the event data. */
-const CalEvents = new Mongo.Collection('CalEvents');
+const CalEvent = new Mongo.Collection('CalEvents');
 
 /** Define a shema to specify the structure of each documentation in the collection. */
-const CalEventsSchema = new SimpleSchema({
-    SUMMARY: {
+const CalEventSchema = new SimpleSchema({
+    summary: {
         type: String,
         optional: true,
     },
-    Start_Date: {
+    StartDate: {
         type: String,
         optional: true,
         defaultValue: ' ',
     },
-    End_Date: {
+    EndDate: {
         type: String,
         optional: true,
         defaultValue: ' ',
@@ -30,7 +30,7 @@ const CalEventsSchema = new SimpleSchema({
 }, { tracker: Tracker });
 
 /** Attach this schema to the collection. */
-CalEvents.attachSchema(CalEventsSchema);
+CalEvent.attachSchema(CalEventSchema);
 
 /** Make the collection and schema available to other code. */
-export { CalEvents, CalEventsSchema };
+export { CalEvent, CalEventSchema };

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Meteor } from 'meteor/meteor';
-import { CalEvents } from '/imports/api/stuff/CalEvents';
+import { CalEvent } from '/imports/api/stuff/CalEvents';
+import EventItem from '/imports/ui/components/EventItem';
 import { Grid, Button } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { withTracker } from 'meteor/react-meteor-data';
@@ -22,7 +23,7 @@ class ExportCal extends React.Component {
 
     exportICS() {
 
-        const events = this.props.calevents.map((Publications) => (<CalEvents key={Publications._id} Publications={Publications} />));
+        const events = this.props.calevents.map((event) => (<EventItem key={event._id} event={event} />));
         //eslint-disable-next-line global-require
         const fileDownload = require('js-file-download');
         const filename = 'export.ics';
@@ -82,9 +83,9 @@ ExportCal.propTypes = {
 
 export default withTracker(() => {
     // Get access to Stuff documents.
-    const subscription = Meteor.subscribe('CalEvents');
+    const subscription = Meteor.subscribe('AllEvents');
     return {
-        calevents: CalEvents.find({}).fetch(),
+        calevents: CalEvent.find({}).fetch(),
         ready: subscription.ready(),
     };
 })(ExportCal);

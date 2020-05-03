@@ -1,43 +1,21 @@
 import React from 'react';
-import { fs } from 'fs';
-import { CalEvents, CalEventsSchema } from '/imports/api/stuff/CalEvents';
-import { Grid, Segment, Header, Form, Table, Button } from 'semantic-ui-react';
+import { CalEvent, CalEventSchema } from '/imports/api/stuff/CalEvents';
+import { Grid, Segment, Header, Form } from 'semantic-ui-react';
 import { AutoForm, ErrorsField, SelectField, SubmitField, TextField } from 'uniforms-semantic';
 import swal from 'sweetalert';
-import PropTypes from 'prop-types';
 import 'uniforms-bridge-simple-schema-2';
 import { Meteor } from 'meteor/meteor';
-import SimpleSchema from 'simpl-schema';
 import DatePicker from 'react-datepicker/es';
 import 'react-datepicker/dist/react-datepicker.css';
 
-/** Create a schema to specify the structure of the data to appear in the form. */
-/*Using CalEventsSchema from CalEvents Does the same thing*/
-/*const formSchema = new SimpleSchema({
-    BEGIN: {
-        type: String,
-        optional: false,
-        defaultValue: 'BEGIN:VEVENT',
-    },
-    SUMMARY: {
-        type: String,
-        optional: true,
-    },
-    CLASS: {
-        type: String,
-        optional: false,
-        allowedValues: ['PUBLIC', 'PRIVATE', 'CONFIDENTIAL'],
-        defaultValue: 'PUBLIC',
-    },
-    END: {
-        type: String,
-        optional: false,
-        defaultValue: 'END:VEVENT',
-    },
-});*
-
 /** Renders the Page for adding a document. */
 class AddEvent extends React.Component {
+
+    constructor(props) {
+        super(props);
+        this.submit = this.submit.bind(this);
+        this.render = this.render.bind(this);
+    }
 
     state = {
         startDate: new Date(),
@@ -71,23 +49,23 @@ class AddEvent extends React.Component {
         // eslint-disable-next-line prefer-const
         result = dt.join('');
 
-        console.log(result);
+        //console.log(result);
         return result.replace(/,/g, '');
     };
 
     /** On submit, insert the data. */
     submit(data) {
-        const { SUMMARY, CLASS } = data;
+        const { summary, CLASS } = data;
         const owner = Meteor.user().username;
-        const StartDate = this.state.startDate;
-        const EndDate = this.state.endDate;
+        const Start_Date = this.state.startDate;
+        const End_Date = this.state.endDate;
         const startingDate = [];
         const endingDate = [];
-        const stYear = StartDate.toString().split(' ');
-        const enYear = EndDate.toString().split(' ');
+        const stYear = Start_Date.toString().split(' ');
+        const enYear = End_Date.toString().split(' ');
 
-        console.log(stYear);
-        console.log(enYear);
+        //console.log(stYear);
+        //console.log(enYear);
 
         startingDate[0] = stYear[3];
         endingDate[0] = enYear[3];
@@ -149,16 +127,16 @@ class AddEvent extends React.Component {
         startingDate[2] = stYear[2];
         endingDate[2] = enYear[2];
 
-        const Start_Date = this.createDateTime(startingDate);
-        const End_Date = this.createDateTime(endingDate);
+        const StartDate = this.createDateTime(startingDate);
+        const EndDate = this.createDateTime(endingDate);
 
-        console.log(SUMMARY);
-        console.log(Start_Date);
-        console.log(End_Date);
+        /*console.log(summary);
+        console.log(StartDate);
+        console.log(EndDate);
         console.log(CLASS);
-        console.log(owner);
+        console.log(owner);*/
 
-        CalEvents.insert({ SUMMARY, Start_Date, End_Date, CLASS, owner },
+        CalEvent.insert({ summary, StartDate, EndDate, CLASS, owner },
             (error) => {
                 if (error) {
                     swal('Error', error.message, 'error');
@@ -177,12 +155,12 @@ class AddEvent extends React.Component {
                 <Grid.Column>
                     <Header as="h2" textAlign="center">Add Event</Header>
                     <AutoForm
-                        schema={CalEventsSchema}
+                        schema={CalEventSchema}
                         ref={(ref) => { this.formRef = ref; }}
                         onSubmit={data => this.submit(data)}
                     >
                         <Segment>
-                            <TextField name='SUMMARY'/>
+                            <TextField name='summary'/>
                             <Form.Group widths='equal' style={padding}>
                                 <DatePicker
                                     label='Start Date'

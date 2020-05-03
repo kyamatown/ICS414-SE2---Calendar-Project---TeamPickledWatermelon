@@ -1,10 +1,8 @@
 import React from 'react';
 import { Grid, Table, Header, Loader } from 'semantic-ui-react';
-import Calendar from 'react-calendar';
-import AddEvent from '../components/AddEvent';
 import 'react-calendar/dist/Calendar.css';
-import SimpleSchema from 'simpl-schema';
-import { CalEvents, CalEventsSchema } from '/imports/api/stuff/CalEvents';
+import { CalEvent } from '/imports/api/stuff/CalEvents';
+import EventItem from '/imports/ui/components/EventItem';
 import { withTracker } from 'meteor/react-meteor-data';
 import PropTypes from 'prop-types';
 
@@ -34,7 +32,7 @@ class EventsPage extends React.Component {
                                 </Table.Row>
                             </Table.Header>
                             <Table.Body>
-                                {this.props.events.map((Publications) => <CalEvents key={Publications._id} Publications={Publications} />)}
+                                {this.props.events.map((event) => <EventItem key={event._id} event={event} />)}
                             </Table.Body>
                         </Table>
                     </Grid.Column>
@@ -43,17 +41,16 @@ class EventsPage extends React.Component {
         );
     }
 }
+
 EventsPage.propTypes = {
-    eventss: PropTypes.array.isRequired,
+    events: PropTypes.array.isRequired,
     ready: PropTypes.bool.isRequired,
 };
 
-/** withTracker connects Meteor data to React components. https://guide.meteor.com/react.html#using-withTracker */
 export default withTracker(() => {
-    // Get access to Stuff documents.
-    const subscription = Meteor.subscribe('CalEvents');
+    const subscription = Meteor.subscribe('AllEvents');
     return {
-        events: Stuffs.find({}).fetch(),
+        events: CalEvent.find({}).fetch(),
         ready: subscription.ready(),
     };
-})(ListStuff);
+})(EventsPage);
