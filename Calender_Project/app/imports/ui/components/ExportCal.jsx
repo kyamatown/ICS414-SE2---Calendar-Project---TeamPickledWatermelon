@@ -16,6 +16,10 @@ class ExportCal extends React.Component {
         this.exportICS();
     }
 
+    deleteMongo() {
+        Meteor.call('removeCollection')
+    }
+
     exportICS() {
 
         const events = this.props.calevents.map((Publications) => (<CalEvents key={Publications._id} Publications={Publications} />));
@@ -65,6 +69,7 @@ class ExportCal extends React.Component {
         return (
             <Grid container centered>
                 <Button basic onClick={this.exportICS.bind(this)}>Export Calendar</Button>
+                <Button basic onClick={this.deleteMongo.bind(this)}>TESTING: DELETE COLLECTION</Button>
             </Grid>
         )
     }
