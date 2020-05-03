@@ -23,7 +23,7 @@ class ExportCal extends React.Component {
 
     exportICS() {
 
-        const events = this.props.calevents.map((event) => (<EventItem key={event._id} event={event} />));
+        var events = CalEvent.find({});
         //eslint-disable-next-line global-require
         const fileDownload = require('js-file-download');
         const filename = 'export.ics';
@@ -33,14 +33,13 @@ class ExportCal extends React.Component {
         icsFile += 'START:VTIMEZONE\n';
         icsFile += 'TZID:Pacific/honolulu\n';
         icsFile += 'END:VTIMEZONE\n';
-        icsFile += events;
-        icsFile += '\n'
-        icsFile += 'BEGIN:VEVENT\n';/*
-        icsFile += `SUMMARY:${Summary}\n`;
-        icsFile += `DTSTART:${start}\n`;
-        icsFile += `DTEND:${end}\n`;
-        icsFile += `CLASS:${Class}\n`;*/
-        icsFile += 'END:VEVENT\n';
+        events.forEach(function (CalEvent) {
+            icsFile += "BEGIN:VEVENT\n" + "SUMMARY:" + CalEvent.summary + "\n"
+                + "DTSTART:" + CalEvent.StartDate + "\n"
+                + "DTEND:" + CalEvent.EndDate + "\n"
+                + "CLASS:" + CalEvent.CLASS + "\n"
+                + "END:VEVENT\n"
+        });
         icsFile += 'END:VCALENDAR';
 
         fileDownload(icsFile, filename);
