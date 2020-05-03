@@ -1,8 +1,6 @@
 import React from 'react';
 import { Table } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
-import { withTracker } from 'meteor/react-meteor-data';
-import { CalEvent } from '/imports/api/stuff/CalEvents';
 
 class EventItem extends React.Component {
     render() {

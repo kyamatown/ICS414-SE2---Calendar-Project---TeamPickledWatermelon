@@ -11,6 +11,10 @@ const CalEventSchema = new SimpleSchema({
         type: String,
         optional: true,
     },
+    DateStamp: {
+        type: String,
+        optional: true,
+    },
     StartDate: {
         type: String,
         optional: true,
@@ -26,6 +30,10 @@ const CalEventSchema = new SimpleSchema({
         optional: false,
         allowedValues: ['PUBLIC', 'PRIVATE', 'CONFIDENTIAL'],
         defaultValue: 'PUBLIC',
+    },
+    owner: {
+        type: String,
+        optional: true,
     },
 }, { tracker: Tracker });
 

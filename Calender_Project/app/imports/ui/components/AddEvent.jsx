@@ -34,23 +34,27 @@ class AddEvent extends React.Component {
         });
     };  
 
-    createDateTime = (date) => {
-        let dt = [];
-        let result;
-        const today = new Date();
-
-        dt = dt.concat(date.toString());
-        dt = dt.concat('T');
-        dt = dt.concat(today.getHours().toString());
-        dt = dt.concat(today.getMinutes().toString());
-        dt = dt.concat('00');
-        dt = dt.concat('Z');
-
-        // eslint-disable-next-line prefer-const
-        result = dt.join('');
-
-        //console.log(result);
-        return result.replace(/,/g, '');
+    convertDate = (date) => {
+        let finalDate = [];
+        let newDate = date.toString();
+        let dateParts = newDate.split(' ');
+        let months = {
+            Jan: '01',
+            Feb: '02',
+            Mar: '03',
+            Apr: '04',
+            May: '05',
+            Jun: '06',
+            Jul: '07',
+            Aug: '08',
+            Sep: '09',
+            Oct: '10',
+            Nov: '11',
+            Dec: '12'
+        };
+        let splitTime = dateParts[4].split(':');
+        let newTime = 'T' + splitTime[0] + splitTime[1] + splitTime[2] + 'Z';
+        return finalDate = dateParts[3] + months[dateParts[1]] + dateParts[2] + newTime;
     };
 
     /** On submit, insert the data. */
@@ -59,84 +63,21 @@ class AddEvent extends React.Component {
         const owner = Meteor.user().username;
         const Start_Date = this.state.startDate;
         const End_Date = this.state.endDate;
-        const startingDate = [];
-        const endingDate = [];
-        const stYear = Start_Date.toString().split(' ');
-        const enYear = End_Date.toString().split(' ');
+        const timeStamp = new Date();
 
-        //console.log(stYear);
-        //console.log(enYear);
+        let StartDate = this.convertDate(Start_Date);
+        let EndDate = this.convertDate(End_Date);
+        let DateStamp = this.convertDate(timeStamp);
 
-        startingDate[0] = stYear[3];
-        endingDate[0] = enYear[3];
+        //Check Formatting
+        //console.log(StartDate);
+        //console.log(EndDate);
+        //console.log(DateStamp);
 
-        if (stYear[1].includes('Jan')) {
-            startingDate[1] = '01';
-        } else if (stYear[1].includes('Feb')) {
-            startingDate[1] = '02';
-        } else if (stYear[1].includes('Mar')) {
-            startingDate[1] = '03';
-        } else if (stYear[1].includes('Apr')) {
-            startingDate[1] = '04';
-        } else if (stYear[1].includes('May')) {
-            startingDate[1] = '05';
-        } else if (stYear[1].includes('June')) {
-            startingDate[1] = '06';
-        } else if (stYear[1].includes('July')) {
-            startingDate[1] = '07';
-        } else if (stYear[1].includes('Aug')) {
-            startingDate[1] = '08';
-        } else if (stYear[1].includes('Sep')) {
-            startingDate[1] = '09';
-        } else if (stYear[1].includes('Oct')) {
-            startingDate[1] = '10';
-        } else if (stYear[1].includes('Nov')) {
-            startingDate[1] = '11';
-        } else if (stYear[1].includes('Dec')) {
-            startingDate[1] = '12';
-        }
+        //Check owner
+        //console.log(owner);
 
-        if (enYear[1].includes('Jan')) {
-            endingDate[1] = '01';
-        } else if (enYear[1].includes('Feb')) {
-            endingDate[1] = '02';
-        } else if (enYear[1].includes('Mar')) {
-            endingDate[1] = '03';
-        } else if (enYear[1].includes('Apr')) {
-            endingDate[1] = '04';
-        } else if (enYear[1].includes('May')) {
-            endingDate[1] = '05';
-        } else if (enYear[1].includes('June')) {
-            endingDate[1] = '06';
-        } else if (enYear[1].includes('July')) {
-            endingDate[1] = '07';
-        } else if (enYear[1].includes('Aug')) {
-            endingDate[1] = '08';
-        } else if (enYear[1].includes('Sep')) {
-            endingDate[1] = '09';
-        } else if (enYear[1].includes('Oct')) {
-            endingDate[1] = '10';
-        } else if (enYear[1].includes('Nov')) {
-            endingDate[1] = '11';
-        } else if (enYear[1].includes('Dec')) {
-            endingDate[1] = '12';
-        } else {
-            swal('error');
-        }
-
-        startingDate[2] = stYear[2];
-        endingDate[2] = enYear[2];
-
-        const StartDate = this.createDateTime(startingDate);
-        const EndDate = this.createDateTime(endingDate);
-
-        /*console.log(summary);
-        console.log(StartDate);
-        console.log(EndDate);
-        console.log(CLASS);
-        console.log(owner);*/
-
-        CalEvent.insert({ summary, StartDate, EndDate, CLASS, owner },
+        CalEvent.insert({ summary, DateStamp, StartDate, EndDate, CLASS, owner },
             (error) => {
                 if (error) {
                     swal('Error', error.message, 'error');
@@ -149,7 +90,7 @@ class AddEvent extends React.Component {
 
     /** Render the form. Use Uniforms: https://github.com/vazco/uniforms */
     render() {
-        const padding = { paddingLeft: '7px' };
+        const padding = { paddingLeft: '8px' };
         return (
             <Grid container centered>
                 <Grid.Column>
@@ -157,26 +98,38 @@ class AddEvent extends React.Component {
                     <AutoForm
                         schema={CalEventSchema}
                         ref={(ref) => { this.formRef = ref; }}
-                        onSubmit={data => this.submit(data)}
-                    >
+                        onSubmit={data => this.submit(data)}>
                         <Segment>
-                            <TextField name='summary'/>
-                            <Form.Group widths='equal' style={padding}>
+                            <TextField name='summary' />
+                            <Form.Group style={padding}>
                                 <DatePicker
-                                    label='Start Date'
+                                    name='StartDate'
+                                    label='StartDate'
                                     selected={this.state.startDate}
                                     onChange={this.handleStartChange}
+                                    showTimeSelect
+                                    timeFormat="HH:mm"
+                                    timeIntervals={15}
+                                    timeCaption="Start Time"
+                                    dateFormat="MM/dd/yyyy h:mm aa"
                                 />
                                 <div style={padding}>
                                     <DatePicker
-                                        label='End Date'
+                                        name='EndDate'
+                                        label='EndDate'
                                         selected={this.state.endDate}
                                         onChange={this.handleEndChange}
+                                        showTimeSelect
+                                        timeFormat="HH:mm"
+                                        timeIntervals={15}
+                                        timeCaption="Start Time"
+                                        dateFormat="MM/dd/yyyy h:mm aa"
                                     />
-                                </div>
+                                    </div>
                             </Form.Group>
                             <SelectField
                                 name='CLASS'
+                                label='Class'
                                 options={[
                                     { label: 'Public', value: 'PUBLIC' },
                                     { label: 'Private', value: 'PRIVATE' },
