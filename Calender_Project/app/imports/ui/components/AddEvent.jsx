@@ -59,7 +59,7 @@ class AddEvent extends React.Component {
 
     /** On submit, insert the data. */
     submit(data) {
-        const { summary, CLASS } = data;
+        const { Summary, CLASS, Description, Location, TRANSP } = data;
         const owner = Meteor.user().username;
         const Start_Date = this.state.startDate;
         const End_Date = this.state.endDate;
@@ -67,7 +67,7 @@ class AddEvent extends React.Component {
 
         let StartDate = this.convertDate(Start_Date);
         let EndDate = this.convertDate(End_Date);
-        let DateStamp = this.convertDate(timeStamp);
+        let Created = this.convertDate(timeStamp);
 
         //Check Formatting
         //console.log(StartDate);
@@ -77,7 +77,7 @@ class AddEvent extends React.Component {
         //Check owner
         //console.log(owner);
 
-        CalEvent.insert({ summary, DateStamp, StartDate, EndDate, CLASS, owner },
+        CalEvent.insert({ Summary, Created, StartDate, EndDate, CLASS, owner, Description, Location, TRANSP },
             (error) => {
                 if (error) {
                     swal('Error', error.message, 'error');
@@ -90,7 +90,9 @@ class AddEvent extends React.Component {
 
     /** Render the form. Use Uniforms: https://github.com/vazco/uniforms */
     render() {
-        const padding = { paddingLeft: '8px' };
+        const sbsStyle = { paddingLeft: '8px' };
+        const inSBSStyle = { width: '160px' }
+        const inSBSStyle2 = { paddingLeft: '8px', width: '170px' }
         return (
             <Grid container centered>
                 <Grid.Column>
@@ -100,20 +102,22 @@ class AddEvent extends React.Component {
                         ref={(ref) => { this.formRef = ref; }}
                         onSubmit={data => this.submit(data)}>
                         <Segment>
-                            <TextField name='summary' />
-                            <Form.Group style={padding}>
-                                <DatePicker
-                                    name='StartDate'
-                                    label='StartDate'
-                                    selected={this.state.startDate}
-                                    onChange={this.handleStartChange}
-                                    showTimeSelect
-                                    timeFormat="HH:mm"
-                                    timeIntervals={15}
-                                    timeCaption="Start Time"
-                                    dateFormat="MM/dd/yyyy h:mm aa"
-                                />
-                                <div style={padding}>
+                            <TextField name='Summary' />
+                            <Form.Group style={sbsStyle}>
+                                <div style={inSBSStyle}>
+                                    <DatePicker
+                                        name='StartDate'
+                                        label='StartDate'
+                                        selected={this.state.startDate}
+                                        onChange={this.handleStartChange}
+                                        showTimeSelect
+                                        timeFormat="HH:mm"
+                                        timeIntervals={15}
+                                        timeCaption="Start Time"
+                                        dateFormat="MM/dd/yyyy h:mm aa"
+                                    />
+                                </div>
+                                <div style={inSBSStyle2}>
                                     <DatePicker
                                         name='EndDate'
                                         label='EndDate'
@@ -122,20 +126,36 @@ class AddEvent extends React.Component {
                                         showTimeSelect
                                         timeFormat="HH:mm"
                                         timeIntervals={15}
-                                        timeCaption="Start Time"
+                                        timeCaption="End Time"
                                         dateFormat="MM/dd/yyyy h:mm aa"
                                     />
-                                    </div>
+                                </div>
                             </Form.Group>
-                            <SelectField
-                                name='CLASS'
-                                label='Class'
-                                options={[
-                                    { label: 'Public', value: 'PUBLIC' },
-                                    { label: 'Private', value: 'PRIVATE' },
-                                    { label: 'Confidential', value: 'CONFIDENTIAL' },
-                                ]}
-                            />
+                            <TextField name='Description' />
+                            <TextField name='Location' />
+                            <Form.Group>
+                                <div>
+                                <SelectField
+                                    name='TRANSP'
+                                    label='Priority'
+                                    options={[
+                                        { label: 'Busy', value: 'OPAQUE' },
+                                        { label: 'Free', value: 'TRANSPARENT' },
+                                    ]}
+                                />
+                                </div>
+                                <div style={inSBSStyle2}>
+                                <SelectField
+                                    name='CLASS'
+                                    label='Class'
+                                    options={[
+                                        { label: 'Public', value: 'PUBLIC' },
+                                        { label: 'Private', value: 'PRIVATE' },
+                                        { label: 'Confidential', value: 'CONFIDENTIAL' },
+                                    ]}
+                                />
+                                </div>
+                            </Form.Group>
                             <SubmitField value='submit' />
                             <ErrorsField/>
                         </Segment>

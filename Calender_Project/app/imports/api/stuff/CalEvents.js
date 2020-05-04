@@ -7,11 +7,7 @@ const CalEvent = new Mongo.Collection('CalEvents');
 
 /** Define a shema to specify the structure of each documentation in the collection. */
 const CalEventSchema = new SimpleSchema({
-    summary: {
-        type: String,
-        optional: true,
-    },
-    DateStamp: {
+    Summary: {
         type: String,
         optional: true,
     },
@@ -29,9 +25,31 @@ const CalEventSchema = new SimpleSchema({
         type: String,
         optional: false,
         allowedValues: ['PUBLIC', 'PRIVATE', 'CONFIDENTIAL'],
-        defaultValue: 'PUBLIC',
+        defaultValue: 'PRIVATE',
     },
     owner: {
+        type: String,
+        optional: true,
+    },
+    Created: {
+        type: String,
+        optional: true,
+    },
+    Description: {
+        type: String,
+        optional: true,
+    },
+    Location: {
+        type: String,
+        optional: false,
+    },
+    TRANSP: {
+        type: String,
+        optional: false,
+        allowedValues: ['TRANSPARENT', 'OPAQUE'],
+        defaultValue: 'OPAQUE',
+    },
+    Sequence: {
         type: String,
         optional: true,
     },
