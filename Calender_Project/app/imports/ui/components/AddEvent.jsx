@@ -97,7 +97,7 @@ class AddEvent extends React.Component {
         }
         else if ((cDate[2] == sDate[2] || cDate[2] == eDate[2]) && (cTime[0] >= sTime[0] || cTime[0] >= eTime[0])) {
             swal('Error', 'Invalid Time', 'error');
-            console.log("Checking CurTime");
+            console.log("Checking CurTime Hours");
             return dateValid = false;
         }
         else if (eDate[3] < sDate[3]) {
@@ -115,14 +115,14 @@ class AddEvent extends React.Component {
             console.log("Checking Start and End Day");
             return dateValid = false;
         }
-        else if (eTime[0] < sTime[0]) {
+        else if ((eDate[2] == sDate[2]) && (eTime[0] < sTime[0])) {
             swal('Error', 'Invalid Time', 'error');
             console.log(sTime[0]);
             console.log(eTime[0]);
             console.log("Checking Start and End Time Hours");
             return dateValid = false;
         }
-        else if (eTime[1] <= sTime[1]) {
+        else if ((eTime[0] == sTime[0]) && (eTime[1] < sTime[1])) {
             swal('Error', 'Invalid Time', 'error');
             console.log("Checking Start and End Time Minutes");
             return dateValid = false;
