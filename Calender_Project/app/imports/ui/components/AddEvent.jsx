@@ -105,9 +105,9 @@ class AddEvent extends React.Component {
                             <TextField name='Summary' />
                             <Form.Group style={sbsStyle}>
                                 <div style={inSBSStyle}>
+                                    <label style={{ fontWeight: "bold" }}>Start Date</label>
                                     <DatePicker
                                         name='StartDate'
-                                        label='StartDate'
                                         selected={this.state.startDate}
                                         onChange={this.handleStartChange}
                                         showTimeSelect
@@ -118,9 +118,9 @@ class AddEvent extends React.Component {
                                     />
                                 </div>
                                 <div style={inSBSStyle2}>
+                                    <label style={{ fontWeight: "bold" }}>End Date</label>
                                     <DatePicker
                                         name='EndDate'
-                                        label='EndDate'
                                         selected={this.state.endDate}
                                         onChange={this.handleEndChange}
                                         showTimeSelect
