@@ -36,8 +36,7 @@ class AddEvent extends React.Component {
 
     convertDate = (date) => {
         let finalDate = [];
-        let newDate = date.toString();
-        let dateParts = newDate.split(' ');
+        let dateParts = date.toString().split(' ');
         let months = {
             Jan: '01',
             Feb: '02',
@@ -57,6 +56,83 @@ class AddEvent extends React.Component {
         return finalDate = dateParts[3] + months[dateParts[1]] + dateParts[2] + newTime;
     };
 
+    dateValidation = (dateValid, stDate, enDate) => {
+        let curDate = new Date();
+        let cDate = curDate.toString().split(' ');
+        let sDate = stDate.toString().split(' ');
+        let eDate = enDate.toString().split(' ');
+        let cTime = cDate[4].split(':');
+        let sTime = sDate[4].split(':');
+        let eTime = eDate[4].split(':');
+        let months = {
+            Jan: '01',
+            Feb: '02',
+            Mar: '03',
+            Apr: '04',
+            May: '05',
+            Jun: '06',
+            Jul: '07',
+            Aug: '08',
+            Sep: '09',
+            Oct: '10',
+            Nov: '11',
+            Dec: '12'
+        };
+        //Check start and end against current date first
+        //Then check against each other
+        if (cDate[3] > sDate[3] || cDate[3] > eDate[3]) {
+            swal('Error', 'Invalid Date', 'error');
+            console.log("Checking CurYear");
+            return dateValid = false;
+        }
+        else if (months[cDate[1]] > months[sDate[1]] || months[cDate[1]] > months[eDate[1]]) {
+            swal('Error', 'Invalid Date', 'error');
+            console.log("Checking CurMonth");
+            return dateValid = false;
+        }
+        else if (cDate[2] > sDate[2] || cDate[2] > eDate[2]) {
+            swal('Error', 'Invalid Date', 'error');
+            console.log("Checking CurDay");
+            return dateValid = false;
+        }
+        else if ((cDate[2] == sDate[2] || cDate[2] == eDate[2]) && (cTime[0] >= sTime[0] || cTime[0] >= eTime[0])) {
+            swal('Error', 'Invalid Time', 'error');
+            console.log("Checking CurTime");
+            return dateValid = false;
+        }
+        else if (eDate[3] < sDate[3]) {
+            swal('Error', 'Invalid Date', 'error');
+            console.log("Checking Start and End Year");
+            return dateValid = false;
+        }
+        else if (months[eDate[1]] < months[sDate[1]]) {
+            swal('Error', 'Invalid Date', 'error');
+            console.log("Checking Start and End Month");
+            return dateValid = false;
+        }
+        else if (eDate[2] < sDate[2]) {
+            swal('Error', 'Invalid Date', 'error');
+            console.log("Checking Start and End Day");
+            return dateValid = false;
+        }
+        else if (eTime[0] < sTime[0]) {
+            swal('Error', 'Invalid Time', 'error');
+            console.log(sTime[0]);
+            console.log(eTime[0]);
+            console.log("Checking Start and End Time Hours");
+            return dateValid = false;
+        }
+        else if (eTime[1] <= sTime[1]) {
+            swal('Error', 'Invalid Time', 'error');
+            console.log("Checking Start and End Time Minutes");
+            return dateValid = false;
+        }
+        else {
+            console.log("Date Valid");
+            return dateValid = true;
+        }
+    }
+
     /** On submit, insert the data. */
     submit(data) {
         const { Summary, CLASS, Description, Location, TRANSP } = data;
@@ -64,27 +140,27 @@ class AddEvent extends React.Component {
         const Start_Date = this.state.startDate;
         const End_Date = this.state.endDate;
         const timeStamp = new Date();
+        let dateValid = false;
+        let StartDate = [];
+        let EndDate = [];
+        let Created = [];
 
-        let StartDate = this.convertDate(Start_Date);
-        let EndDate = this.convertDate(End_Date);
-        let Created = this.convertDate(timeStamp);
+        dateValid = this.dateValidation(dateValid, Start_Date, End_Date)
+        console.log(dateValid);
 
-        //Check Formatting
-        //console.log(StartDate);
-        //console.log(EndDate);
-        //console.log(DateStamp);
-
-        //Check owner
-        //console.log(owner);
-
-        CalEvent.insert({ Summary, Created, StartDate, EndDate, CLASS, owner, Description, Location, TRANSP },
-            (error) => {
-                if (error) {
-                    swal('Error', error.message, 'error');
-                } else {
-                    swal('Success', 'Item added successfully', 'success');
-                }
-            });
+        if (dateValid) {
+            StartDate = this.convertDate(Start_Date);
+            EndDate = this.convertDate(End_Date);
+            Created = this.convertDate(timeStamp);
+            CalEvent.insert({ Summary, Created, StartDate, EndDate, CLASS, owner, Description, Location, TRANSP },
+                (error) => {
+                    if (error) {
+                        swal('Error', error.message, 'error');
+                    } else {
+                        swal('Success', 'Item added successfully', 'success');
+                    }
+                });
+        }  
     };
 
 
