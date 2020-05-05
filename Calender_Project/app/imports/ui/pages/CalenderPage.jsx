@@ -2,6 +2,7 @@ import React from 'react';
 import { Grid } from 'semantic-ui-react';
 import Calendar from 'react-calendar';
 import AddEvent from '../components/AddEvent';
+import ExportCal from '../components/ExportCal';
 import 'react-calendar/dist/Calendar.css';
 
 /** A simple static component to render some text for the landing page. */
@@ -14,21 +15,21 @@ class CalenderPage extends React.Component {
     onChange = date => this.setState({ date });
 
     render() {
-        const padding = { paddingLeft: '300px', paddingTop: '20px' };
+        const divStyle = { paddingTop: '20px', paddingBottom: '20px' };
+        const calStyle = { paddingTop: '55px' }
         return (
             <div>
-                <Grid width='auto' columns={2}>
-                    <Grid.Row comlums={2} centered>
+                <Grid style={divStyle} container stackable centered columns={2}>
                         <Grid.Column>
-                            <AddEvent/>
+                        <AddEvent />
+                        <ExportCal />
                         </Grid.Column>
-                        <Grid.Column style={ padding }>
+                    <Grid.Column style={calStyle} >
                             <Calendar
                                 onChange={this.onChange}
                                 value={this.state.date}
                             /> 
                         </Grid.Column>
-                    </Grid.Row>
                 </Grid>
             </div>
         );

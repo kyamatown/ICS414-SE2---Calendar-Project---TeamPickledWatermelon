@@ -1,42 +1,21 @@
 import React from 'react';
-import { fs } from 'fs';
-import { CalEvents, CalEventsSchema } from '/imports/api/stuff/CalEvents';
+import { CalEvent, CalEventSchema } from '/imports/api/stuff/CalEvents';
 import { Grid, Segment, Header, Form } from 'semantic-ui-react';
 import { AutoForm, ErrorsField, SelectField, SubmitField, TextField } from 'uniforms-semantic';
 import swal from 'sweetalert';
 import 'uniforms-bridge-simple-schema-2';
 import { Meteor } from 'meteor/meteor';
-import SimpleSchema from 'simpl-schema';
 import DatePicker from 'react-datepicker/es';
 import 'react-datepicker/dist/react-datepicker.css';
 
-/** Create a schema to specify the structure of the data to appear in the form. */
-/*Using CalEventsSchema from CalEvents Does the same thing*/
-/*const formSchema = new SimpleSchema({
-    BEGIN: {
-        type: String,
-        optional: false,
-        defaultValue: 'BEGIN:VEVENT',
-    },
-    SUMMARY: {
-        type: String,
-        optional: true,
-    },
-    CLASS: {
-        type: String,
-        optional: false,
-        allowedValues: ['PUBLIC', 'PRIVATE', 'CONFIDENTIAL'],
-        defaultValue: 'PUBLIC',
-    },
-    END: {
-        type: String,
-        optional: false,
-        defaultValue: 'END:VEVENT',
-    },
-});*
-
 /** Renders the Page for adding a document. */
 class AddEvent extends React.Component {
+
+    constructor(props) {
+        super(props);
+        this.submit = this.submit.bind(this);
+        this.render = this.render.bind(this);
+    }
 
     state = {
         startDate: new Date(),
@@ -53,192 +32,207 @@ class AddEvent extends React.Component {
         this.setState({
             endDate: date,
         });
-    };
+    };  
 
-
-    createDateTime = (date) => {
-        let dt = [];
-        let result;
-        const today = new Date();
-
-        dt = dt.concat(date.toString());
-        dt = dt.concat('T');
-        dt = dt.concat(today.getHours().toString());
-        dt = dt.concat(today.getMinutes().toString());
-        dt = dt.concat('00');
-        dt = dt.concat('Z');
-
-        // eslint-disable-next-line prefer-const
-        result = dt.join('');
-
-        console.log(result);
-        return result.replace(/,/g, '');
-    };
-
-    exportICS = (CalEventsSchema) => {
-        state = {
-            events: []
+    convertDate = (date) => {
+        let finalDate = [];
+        let dateParts = date.toString().split(' ');
+        let months = {
+            Jan: '01',
+            Feb: '02',
+            Mar: '03',
+            Apr: '04',
+            May: '05',
+            Jun: '06',
+            Jul: '07',
+            Aug: '08',
+            Sep: '09',
+            Oct: '10',
+            Nov: '11',
+            Dec: '12'
         };
+        let splitTime = dateParts[4].split(':');
+        let newTime = 'T' + splitTime[0] + splitTime[1] + splitTime[2] + 'Z';
+        return finalDate = dateParts[3] + months[dateParts[1]] + dateParts[2] + newTime;
+    };
 
-        //const CalEvents = this.state.events.map((CalEvents) => (<CalEvents key={events._id} events={events} />);
-        // eslint-disable-next-line global-require
-        const fileDownload = require('js-file-download');
-        const filename = 'export.ics';
-
-        let icsFile = 'BEGIN:VCALENDAR\n';
-        icsFile += 'VERSION:2.0\n';
-        icsFile += 'START:VTIMEZONE\n';
-        icsFile += 'TZID:Pacific/honolulu\n';
-        icsFile += 'END:VTIMEZONE\n';
-        //icsFile += CalEvents;
-        icsFile += '\n'
-        /*
-        icsFile += 'BEGIN:VEVENT\n';
-        icsFile += `SUMMARY:${Summary}\n`;
-        icsFile += `DTSTART:${start}\n`;
-        icsFile += `DTEND:${end}\n`;
-        icsFile += `CLASS:${Class}\n`;
-        icsFile += 'END:VEVENT\n';
-        */
-        icsFile += 'END:VCALENDAR';
-
-        fileDownload(icsFile, filename);
+    dateValidation = (dateValid, stDate, enDate) => {
+        let curDate = new Date();
+        let cDate = curDate.toString().split(' ');
+        let sDate = stDate.toString().split(' ');
+        let eDate = enDate.toString().split(' ');
+        let cTime = cDate[4].split(':');
+        let sTime = sDate[4].split(':');
+        let eTime = eDate[4].split(':');
+        let months = {
+            Jan: '01',
+            Feb: '02',
+            Mar: '03',
+            Apr: '04',
+            May: '05',
+            Jun: '06',
+            Jul: '07',
+            Aug: '08',
+            Sep: '09',
+            Oct: '10',
+            Nov: '11',
+            Dec: '12'
+        };
+        //Check start and end against current date first
+        //Then check against each other
+        if (cDate[3] > sDate[3] || cDate[3] > eDate[3]) {
+            swal('Error', 'Invalid Date', 'error');
+            console.log("Checking CurYear");
+            return dateValid = false;
+        }
+        else if (months[cDate[1]] > months[sDate[1]] || months[cDate[1]] > months[eDate[1]]) {
+            swal('Error', 'Invalid Date', 'error');
+            console.log("Checking CurMonth");
+            return dateValid = false;
+        }
+        else if (cDate[2] > sDate[2] || cDate[2] > eDate[2]) {
+            swal('Error', 'Invalid Date', 'error');
+            console.log("Checking CurDay");
+            return dateValid = false;
+        }
+        else if ((cDate[2] == sDate[2] || cDate[2] == eDate[2]) && (cTime[0] >= sTime[0] || cTime[0] >= eTime[0])) {
+            swal('Error', 'Invalid Time', 'error');
+            console.log("Checking CurTime Hours");
+            return dateValid = false;
+        }
+        else if (eDate[3] < sDate[3]) {
+            swal('Error', 'Invalid Date', 'error');
+            console.log("Checking Start and End Year");
+            return dateValid = false;
+        }
+        else if (months[eDate[1]] < months[sDate[1]]) {
+            swal('Error', 'Invalid Date', 'error');
+            console.log("Checking Start and End Month");
+            return dateValid = false;
+        }
+        else if (eDate[2] < sDate[2]) {
+            swal('Error', 'Invalid Date', 'error');
+            console.log("Checking Start and End Day");
+            return dateValid = false;
+        }
+        else if ((eDate[2] == sDate[2]) && (eTime[0] < sTime[0])) {
+            swal('Error', 'Invalid Time', 'error');
+            console.log(sTime[0]);
+            console.log(eTime[0]);
+            console.log("Checking Start and End Time Hours");
+            return dateValid = false;
+        }
+        else if ((eTime[0] == sTime[0]) && (eTime[1] < sTime[1])) {
+            swal('Error', 'Invalid Time', 'error');
+            console.log("Checking Start and End Time Minutes");
+            return dateValid = false;
+        }
+        else {
+            console.log("Date Valid");
+            return dateValid = true;
+        }
     }
-
 
     /** On submit, insert the data. */
     submit(data) {
-        const { SUMMARY, CLASS } = data;
+        const { Summary, CLASS, Description, Location, TRANSP } = data;
         const owner = Meteor.user().username;
-        const StartDate = this.state.startDate;
-        const EndDate = this.state.endDate;
-        const startingDate = [];
-        const endingDate = [];
-        const stYear = StartDate.toString().split(' ');
-        const enYear = EndDate.toString().split(' ');
+        const Start_Date = this.state.startDate;
+        const End_Date = this.state.endDate;
+        const timeStamp = new Date();
+        let dateValid = false;
+        let StartDate = [];
+        let EndDate = [];
+        let Created = [];
 
-        console.log(stYear);
-        console.log(enYear);
+        dateValid = this.dateValidation(dateValid, Start_Date, End_Date)
+        console.log(dateValid);
 
-        startingDate[0] = stYear[3];
-        endingDate[0] = enYear[3];
+        if (dateValid) {
+            StartDate = this.convertDate(Start_Date);
+            EndDate = this.convertDate(End_Date);
+            Created = this.convertDate(timeStamp);
+            CalEvent.insert({ Summary, Created, StartDate, EndDate, CLASS, owner, Description, Location, TRANSP },
+                (error) => {
+                    if (error) {
+                        swal('Error', error.message, 'error');
+                    } else {
+                        swal('Success', 'Item added successfully', 'success');
+                    }
+                });
+        }  
+    };
 
-        if (stYear[1].includes('Jan')) {
-            startingDate[1] = '01';
-        } else if (stYear[1].includes('Feb')) {
-            startingDate[1] = '02';
-        } else if (stYear[1].includes('Mar')) {
-            startingDate[1] = '03';
-        } else if (stYear[1].includes('Apr')) {
-            startingDate[1] = '04';
-        } else if (stYear[1].includes('May')) {
-            startingDate[1] = '05';
-        } else if (stYear[1].includes('June')) {
-            startingDate[1] = '06';
-        } else if (stYear[1].includes('July')) {
-            startingDate[1] = '07';
-        } else if (stYear[1].includes('Aug')) {
-            startingDate[1] = '08';
-        } else if (stYear[1].includes('Sep')) {
-            startingDate[1] = '09';
-        } else if (stYear[1].includes('Oct')) {
-            startingDate[1] = '10';
-        } else if (stYear[1].includes('Nov')) {
-            startingDate[1] = '11';
-        } else if (stYear[1].includes('Dec')) {
-            startingDate[1] = '12';
-        }
-
-        if (enYear[1].includes('Jan')) {
-            endingDate[1] = '01';
-        } else if (enYear[1].includes('Feb')) {
-            endingDate[1] = '02';
-        } else if (enYear[1].includes('Mar')) {
-            endingDate[1] = '03';
-        } else if (enYear[1].includes('Apr')) {
-            endingDate[1] = '04';
-        } else if (enYear[1].includes('May')) {
-            endingDate[1] = '05';
-        } else if (enYear[1].includes('June')) {
-            endingDate[1] = '06';
-        } else if (enYear[1].includes('July')) {
-            endingDate[1] = '07';
-        } else if (enYear[1].includes('Aug')) {
-            endingDate[1] = '08';
-        } else if (enYear[1].includes('Sep')) {
-            endingDate[1] = '09';
-        } else if (enYear[1].includes('Oct')) {
-            endingDate[1] = '10';
-        } else if (enYear[1].includes('Nov')) {
-            endingDate[1] = '11';
-        } else if (enYear[1].includes('Dec')) {
-            endingDate[1] = '12';
-        } else {
-            swal('error');
-        }
-
-        startingDate[2] = stYear[2];
-        endingDate[2] = enYear[2];
-
-        const Start_Date = this.createDateTime(startingDate);
-        const End_Date = this.createDateTime(endingDate);
-
-        console.log(SUMMARY);
-        console.log(Start_Date);
-        console.log(End_Date);
-        console.log(CLASS);
-        console.log(owner);
-
-        //this.exportICS(CalEventsSchema);
-
-        CalEvents.insert({ SUMMARY, Start_Date, End_Date, CLASS, owner },
-            (error) => {
-                if (error) {
-                    swal('Error', error.message, 'error');
-                } else {
-                    swal('Success', 'Item added successfully', 'success');
-                }
-            });
-    }
 
     /** Render the form. Use Uniforms: https://github.com/vazco/uniforms */
     render() {
-        const padding = { paddingLeft: '7px' };
+        const sbsStyle = { paddingLeft: '8px' };
+        const inSBSStyle = { width: '160px' }
+        const inSBSStyle2 = { paddingLeft: '8px', width: '170px' }
         return (
             <Grid container centered>
                 <Grid.Column>
                     <Header as="h2" textAlign="center">Add Event</Header>
                     <AutoForm
-                        schema={CalEventsSchema}
+                        schema={CalEventSchema}
                         ref={(ref) => { this.formRef = ref; }}
-                        onSubmit={data => this.submit(data)}
-                    >
+                        onSubmit={data => this.submit(data)}>
                         <Segment>
-                            <TextField name='SUMMARY'/>
-                            <Form.Group widths='equal' style={padding}>
-                                <DatePicker
-                                    label='Start Date'
-                                    selected={this.state.startDate}
-                                    onChange={this.handleStartChange}
-                                />
-                                <div style={padding}>
+                            <TextField name='Summary' />
+                            <Form.Group style={sbsStyle}>
+                                <div style={inSBSStyle}>
+                                    <label style={{ fontWeight: "bold" }}>Start Date</label>
                                     <DatePicker
-                                        label='End Date'
+                                        name='StartDate'
+                                        selected={this.state.startDate}
+                                        onChange={this.handleStartChange}
+                                        showTimeSelect
+                                        timeFormat="HH:mm"
+                                        timeIntervals={15}
+                                        timeCaption="Start Time"
+                                        dateFormat="MM/dd/yyyy h:mm aa"
+                                    />
+                                </div>
+                                <div style={inSBSStyle2}>
+                                    <label style={{ fontWeight: "bold" }}>End Date</label>
+                                    <DatePicker
+                                        name='EndDate'
                                         selected={this.state.endDate}
                                         onChange={this.handleEndChange}
+                                        showTimeSelect
+                                        timeFormat="HH:mm"
+                                        timeIntervals={15}
+                                        timeCaption="End Time"
+                                        dateFormat="MM/dd/yyyy h:mm aa"
                                     />
                                 </div>
                             </Form.Group>
-                            <SelectField
-                                name='CLASS'
-                                options={[
-                                    { label: 'Public', value: 'PUBLIC' },
-                                    { label: 'Private', value: 'PRIVATE' },
-                                    { label: 'Confidential', value: 'CONFIDENTIAL' },
-                                ]}
-                            />
+                            <TextField name='Description' />
+                            <TextField name='Location' />
+                            <Form.Group>
+                                <div>
+                                <SelectField
+                                    name='TRANSP'
+                                    label='Priority'
+                                    options={[
+                                        { label: 'Busy', value: 'OPAQUE' },
+                                        { label: 'Free', value: 'TRANSPARENT' },
+                                    ]}
+                                />
+                                </div>
+                                <div style={inSBSStyle2}>
+                                <SelectField
+                                    name='CLASS'
+                                    label='Class'
+                                    options={[
+                                        { label: 'Public', value: 'PUBLIC' },
+                                        { label: 'Private', value: 'PRIVATE' },
+                                        { label: 'Confidential', value: 'CONFIDENTIAL' },
+                                    ]}
+                                />
+                                </div>
+                            </Form.Group>
                             <SubmitField value='submit' />
-                            <button value="exportICS" className="btn btn-primary">Export Calendar</button>
                             <ErrorsField/>
                         </Segment>
                     </AutoForm>

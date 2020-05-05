@@ -1,6 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import { Roles } from 'meteor/alanning:roles';
-import { CalEvents } from '../../api/stuff/CalEvents';
+import { CalEvent } from '../../api/stuff/CalEvents';
 import { Stuffs } from '../../api/stuff/Stuff';
 
 /** This subscription publishes only the documents associated with the logged in user */
@@ -21,8 +21,13 @@ Meteor.publish('StuffAdmin', function publish() {
 });
 
 Meteor.publish('CalEvents', function publish() {
-  if (this.userId) {
-    return CalEvents.find();
-  }
-  return this.ready;
-})
+    if (this.userId) {
+        const username = Meteor.users.findOne(this.userId).username;
+        return CalEvent.find({ owner: username });
+    }
+    return this.ready();
+});
+
+Meteor.publish('AllEvents', function publish() {
+    return CalEvent.find()
+});
