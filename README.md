@@ -58,8 +58,9 @@ You will see the website running at <a href="localhost:3000">localhost:3000</a>
 ### Other Dependencies:
 
 react-calendar
-
+Meteor Google Maps
 ```
 npm install react-calendar
+meteor add dburles:google-maps
 ```
 
