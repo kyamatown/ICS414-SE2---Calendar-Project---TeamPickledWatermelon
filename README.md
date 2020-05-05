@@ -60,7 +60,6 @@ You will see the website running at <a href="localhost:3000">localhost:3000</a>
 react-calendar
 ```
 npm install react-calendar
-Meteor Google Maps
 ```
 Meteor Google Maps
 ```
