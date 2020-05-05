@@ -61,8 +61,8 @@ react-calendar
 ```
 npm install react-calendar
 ```
-Meteor Google Maps
+React Google Maps
 ```
-meteor add dburles:google-maps
+meteor npm install --save google-map-react
 ```
 
