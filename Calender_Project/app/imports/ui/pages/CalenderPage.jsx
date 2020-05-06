@@ -28,7 +28,7 @@ class CalenderPage extends React.Component {
                             <Calendar
                                 onChange={this.onChange}
                                 value={this.state.date}
-                            /> 
+                            />
                         </Grid.Column>
                 </Grid>
             </div>

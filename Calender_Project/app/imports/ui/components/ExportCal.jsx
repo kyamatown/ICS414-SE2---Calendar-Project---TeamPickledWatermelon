@@ -72,7 +72,12 @@ class ExportCal extends React.Component {
                 + 'LOCATION:' + CalEvent.Location + '\n'
                 + 'SUMMARY:' + CalEvent.Summary + '\n'
                 + 'TRANSP:' + CalEvent.TRANSP + '\n'
-                + 'END:VEVENT\n'
+                + 'PRIORITY:' + CalEvent.priority + '\n'
+                + 'ATTENDEE;RSVP=';
+            icsFile += CalEvent.attendee.length ? `TRUE:mailto:${CalEvent.attendee}\n` : 'FALSE\n';
+            icsFile += CalEvent.organizer ? `ORGANIZER;SENT-BY=mailto:${CalEvent.organizer}\n` : '';
+            // eslint-disable-next-line no-useless-concat
+            icsFile += 'END:VEVENT\n';
         });
         icsFile += 'END:VCALENDAR';
 

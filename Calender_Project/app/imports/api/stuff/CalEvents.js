@@ -31,6 +31,11 @@ const CalEventSchema = new SimpleSchema({
         type: String,
         optional: true,
     },
+    attendee: [String],
+    organizer: {
+        type: String,
+        optional: true,
+    },
     Created: {
         type: String,
         optional: true,
@@ -52,6 +57,12 @@ const CalEventSchema = new SimpleSchema({
     Sequence: {
         type: String,
         optional: true,
+    },
+    priority: {
+        type: Number,
+        optional: true,
+        allowedValues: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+        defaultValue: 0,
     },
 }, { tracker: Tracker });
 
