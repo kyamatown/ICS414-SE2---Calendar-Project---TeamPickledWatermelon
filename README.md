@@ -61,8 +61,8 @@ react-calendar
 ```
 npm install react-calendar
 ```
-React Google Maps
+Google Maps Places API
 ```
-meteor npm install --save google-map-react
+meteor npm install --save @babel/runtime material-ui-search-bar react-load-script
 ```
 
