@@ -32,12 +32,12 @@ class AddEvent extends React.Component {
         this.setState({
             endDate: date,
         });
-    };  
+    };
 
     convertDate = (date) => {
         let finalDate = [];
-        let dateParts = date.toString().split(' ');
-        let months = {
+        const dateParts = date.toString().split(' ');
+        const months = {
             Jan: '01',
             Feb: '02',
             Mar: '03',
@@ -49,22 +49,22 @@ class AddEvent extends React.Component {
             Sep: '09',
             Oct: '10',
             Nov: '11',
-            Dec: '12'
+            Dec: '12',
         };
-        let splitTime = dateParts[4].split(':');
-        let newTime = 'T' + splitTime[0] + splitTime[1] + splitTime[2] + 'Z';
+        const splitTime = dateParts[4].split(':');
+        const newTime = `T${splitTime[0]}${splitTime[1]}${splitTime[2]}Z`;
         return finalDate = dateParts[3] + months[dateParts[1]] + dateParts[2] + newTime;
     };
 
     dateValidation = (dateValid, stDate, enDate) => {
-        let curDate = new Date();
-        let cDate = curDate.toString().split(' ');
-        let sDate = stDate.toString().split(' ');
-        let eDate = enDate.toString().split(' ');
-        let cTime = cDate[4].split(':');
-        let sTime = sDate[4].split(':');
-        let eTime = eDate[4].split(':');
-        let months = {
+        const curDate = new Date();
+        const cDate = curDate.toString().split(' ');
+        const sDate = stDate.toString().split(' ');
+        const eDate = enDate.toString().split(' ');
+        const cTime = cDate[4].split(':');
+        const sTime = sDate[4].split(':');
+        const eTime = eDate[4].split(':');
+        const months = {
             Jan: '01',
             Feb: '02',
             Mar: '03',
@@ -76,83 +76,90 @@ class AddEvent extends React.Component {
             Sep: '09',
             Oct: '10',
             Nov: '11',
-            Dec: '12'
+            Dec: '12',
         };
-        //Check start and end against current date first
-        //Then check against each other
+        // Check start and end against current date first
+        // Then check against each other
         if (cDate[3] > sDate[3] || cDate[3] > eDate[3]) {
             swal('Error', 'Invalid Date', 'error');
-            console.log("Checking CurYear");
+            console.log('Checking CurYear');
             return dateValid = false;
         }
-        else if (months[cDate[1]] > months[sDate[1]] || months[cDate[1]] > months[eDate[1]]) {
+        if (months[cDate[1]] > months[sDate[1]] || months[cDate[1]] > months[eDate[1]]) {
             swal('Error', 'Invalid Date', 'error');
-            console.log("Checking CurMonth");
+            console.log('Checking CurMonth');
             return dateValid = false;
         }
-        else if (cDate[2] > sDate[2] || cDate[2] > eDate[2]) {
+        if (cDate[2] > sDate[2] || cDate[2] > eDate[2]) {
             swal('Error', 'Invalid Date', 'error');
-            console.log("Checking CurDay");
+            console.log('Checking CurDay');
             return dateValid = false;
         }
-        else if ((cDate[2] == sDate[2] || cDate[2] == eDate[2]) && (cTime[0] >= sTime[0] || cTime[0] >= eTime[0])) {
+        if ((cDate[2] == sDate[2] || cDate[2] == eDate[2]) && (cTime[0] >= sTime[0] || cTime[0] >= eTime[0])) {
             swal('Error', 'Invalid Time', 'error');
-            console.log("Checking CurTime Hours");
+            console.log('Checking CurTime Hours');
             return dateValid = false;
         }
-        else if (eDate[3] < sDate[3]) {
+        if (eDate[3] < sDate[3]) {
             swal('Error', 'Invalid Date', 'error');
-            console.log("Checking Start and End Year");
+            console.log('Checking Start and End Year');
             return dateValid = false;
         }
-        else if (months[eDate[1]] < months[sDate[1]]) {
+        if (months[eDate[1]] < months[sDate[1]]) {
             swal('Error', 'Invalid Date', 'error');
-            console.log("Checking Start and End Month");
+            console.log('Checking Start and End Month');
             return dateValid = false;
         }
-        else if (eDate[2] < sDate[2]) {
+        if (eDate[2] < sDate[2]) {
             swal('Error', 'Invalid Date', 'error');
-            console.log("Checking Start and End Day");
+            console.log('Checking Start and End Day');
             return dateValid = false;
         }
-        else if ((eDate[2] == sDate[2]) && (eTime[0] < sTime[0])) {
+        if ((eDate[2] == sDate[2]) && (eTime[0] < sTime[0])) {
             swal('Error', 'Invalid Time', 'error');
             console.log(sTime[0]);
             console.log(eTime[0]);
-            console.log("Checking Start and End Time Hours");
+            console.log('Checking Start and End Time Hours');
             return dateValid = false;
         }
-        else if ((eTime[0] == sTime[0]) && (eTime[1] < sTime[1])) {
+        if ((eTime[0] == sTime[0]) && (eTime[1] < sTime[1])) {
             swal('Error', 'Invalid Time', 'error');
-            console.log("Checking Start and End Time Minutes");
+            console.log('Checking Start and End Time Minutes');
             return dateValid = false;
         }
-        else {
-            console.log("Date Valid");
+
+            console.log('Date Valid');
             return dateValid = true;
-        }
+
     }
 
     /** On submit, insert the data. */
     submit(data) {
-        const { Summary, CLASS, Description, Location, TRANSP } = data;
+        // eslint-disable-next-line prefer-const
+        const { Summary, CLASS, Description, Location, TRANSP, priority } = data;
         const owner = Meteor.user().username;
         const Start_Date = this.state.startDate;
         const End_Date = this.state.endDate;
         const timeStamp = new Date();
+        const organizer = owner;
+        let attendee = data.attendee;
         let dateValid = false;
         let StartDate = [];
         let EndDate = [];
         let Created = [];
 
-        dateValid = this.dateValidation(dateValid, Start_Date, End_Date)
+
+        attendee = attendee.split(' ');
+
+        dateValid = this.dateValidation(dateValid, Start_Date, End_Date);
         console.log(dateValid);
+
 
         if (dateValid) {
             StartDate = this.convertDate(Start_Date);
             EndDate = this.convertDate(End_Date);
             Created = this.convertDate(timeStamp);
-            CalEvent.insert({ Summary, Created, StartDate, EndDate, CLASS, owner, Description, Location, TRANSP },
+            CalEvent.insert({ Summary, Created, StartDate, EndDate, CLASS, owner, Description, Location, TRANSP, priority, organizer, attendee },
                 (error) => {
                     if (error) {
                         swal('Error', error.message, 'error');
@@ -160,15 +167,15 @@ class AddEvent extends React.Component {
                         swal('Success', 'Item added successfully', 'success');
                     }
                 });
-        }  
-    };
+        }
+    }
 
 
     /** Render the form. Use Uniforms: https://github.com/vazco/uniforms */
     render() {
         const sbsStyle = { paddingLeft: '8px' };
-        const inSBSStyle = { width: '160px' }
-        const inSBSStyle2 = { paddingLeft: '8px', width: '170px' }
+        const inSBSStyle = { width: '160px' };
+        const inSBSStyle2 = { paddingLeft: '8px', width: '170px' };
         return (
             <Grid container centered>
                 <Grid.Column>
@@ -181,7 +188,7 @@ class AddEvent extends React.Component {
                             <TextField name='Summary' />
                             <Form.Group style={sbsStyle}>
                                 <div style={inSBSStyle}>
-                                    <label style={{ fontWeight: "bold" }}>Start Date</label>
+                                    <label style={{ fontWeight: 'bold' }}>Start Date</label>
                                     <DatePicker
                                         name='StartDate'
                                         selected={this.state.startDate}
@@ -194,7 +201,7 @@ class AddEvent extends React.Component {
                                     />
                                 </div>
                                 <div style={inSBSStyle2}>
-                                    <label style={{ fontWeight: "bold" }}>End Date</label>
+                                    <label style={{ fontWeight: 'bold' }}>End Date</label>
                                     <DatePicker
                                         name='EndDate'
                                         selected={this.state.endDate}
@@ -209,11 +216,12 @@ class AddEvent extends React.Component {
                             </Form.Group>
                             <TextField name='Description' />
                             <TextField name='Location' />
+                            <TextField name='attendee' label='Attendee(s)'/>
                             <Form.Group>
                                 <div>
                                 <SelectField
                                     name='TRANSP'
-                                    label='Priority'
+                                    label='Transparency'
                                     options={[
                                         { label: 'Busy', value: 'OPAQUE' },
                                         { label: 'Free', value: 'TRANSPARENT' },
@@ -231,6 +239,18 @@ class AddEvent extends React.Component {
                                     ]}
                                 />
                                 </div>
+                            </Form.Group>
+                            <Form.Group>
+                            <SelectField
+                                name='priority'
+                                label='Priority'
+                                options={[
+                                    { label: 'None', value: 0 },
+                                    { label: 'High', value: 1 },
+                                    { label: 'Medium', value: 5 },
+                                    { label: 'Low', value: 9 },
+                                ]}
+                            />
                             </Form.Group>
                             <SubmitField value='submit' />
                             <ErrorsField/>

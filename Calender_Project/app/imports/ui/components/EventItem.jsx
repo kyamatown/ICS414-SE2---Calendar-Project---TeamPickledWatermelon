@@ -12,6 +12,7 @@ class EventItem extends React.Component {
                 <Table.Cell>{this.props.event.Description}</Table.Cell>
                 <Table.Cell>{this.props.event.Location}</Table.Cell>
                 <Table.Cell>{this.props.event.TRANSP}</Table.Cell>
+                <Table.Cell>{this.props.event.priority}</Table.Cell>
                 <Table.Cell>{this.props.event.CLASS}</Table.Cell>
             </Table.Row>
         );
