@@ -1,6 +1,6 @@
 # TeamPickledWatermelon
 
-##Table of Contents
+## Table of Contents
 
 * [Overview](#Overview)
 * [User Guide](#User-Guide)
