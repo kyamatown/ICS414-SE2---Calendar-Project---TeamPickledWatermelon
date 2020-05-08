@@ -47,7 +47,8 @@ With all the functionality we have so far, file successfully imports to google c
 
 Calendar directs user on what day it is. The idea was to highlight days of events but we did not get to that feature yet as there were other priorities. We are able to export multiple events.
 
-![UI](images/placesautocomplete.png)
+![UI1](images/newui.png)
+![UI2](images/placesautocomplete.png)
 
 #### Creating Events
 
