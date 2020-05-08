@@ -43,6 +43,9 @@ class CalenderPage extends React.Component {
                                     <ExportCal/>
                                 </Segment>
                             </Segment.Group>
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
                         </Grid.Column>
                 </Grid>
