@@ -52,7 +52,7 @@ Calendar directs user on what day it is. The idea was to highlight days of event
 
 #### Creating Events
 
-Here is an example of two successful submissions of events after going through a few test cases. We will use these as examples for the export and import features.
+Here is an example of two successful submissions of events after going through a few test cases. We will use these as examples for the export and import features. When entering a location, autocomplete will show the top five matches to what the user is typing. The user must select the result they want if they want to commit a location and coordinates to the event listing. Leaving a typed only input will not register a location. Online events can be made by typing in Online and not selecting an event. This will leave location blank with no GEO entry. Online events with GEO attributed to the user's location will be added later.
 
 ![test01](images/test01.png)
 
@@ -68,7 +68,7 @@ The .ics file from the collection of events.
 
 Importing the .ics file into google calendar.
 
-![importics](images/importics.png)
+![importedics](images/importedics.png)
 
 The import is now displayed in the calendar.
 
