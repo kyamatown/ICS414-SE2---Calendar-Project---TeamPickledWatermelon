@@ -25,7 +25,7 @@ const CalEventSchema = new SimpleSchema({
         type: String,
         optional: false,
         allowedValues: ['PUBLIC', 'PRIVATE', 'CONFIDENTIAL'],
-        defaultValue: 'PRIVATE',
+        defaultValue: 'PUBLIC',
     },
     owner: {
         type: String,
