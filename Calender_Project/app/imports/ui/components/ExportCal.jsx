@@ -70,6 +70,7 @@ class ExportCal extends React.Component {
                 + 'CREATED:' + CalEvent.Created + '\n'
                 + 'DESCRIPTION:' + CalEvent.Description + '\n'
                 + 'LOCATION:' + CalEvent.Location + '\n'
+                + 'GEO:' + CalEvent.geo + '\n'
                 + 'SUMMARY:' + CalEvent.Summary + '\n'
                 + 'TRANSP:' + CalEvent.TRANSP + '\n'
                 + 'PRIORITY:' + CalEvent.priority + '\n'
