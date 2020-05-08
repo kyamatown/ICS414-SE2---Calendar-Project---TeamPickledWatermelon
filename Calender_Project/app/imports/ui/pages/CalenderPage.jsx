@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid } from 'semantic-ui-react';
+import { Grid, Segment } from 'semantic-ui-react';
 import Calendar from 'react-calendar';
 import AddEvent from '../components/AddEvent';
 import ExportCal from '../components/ExportCal';
@@ -16,20 +16,28 @@ class CalenderPage extends React.Component {
 
     render() {
         const divStyle = { paddingTop: '20px', paddingBottom: '20px' };
-        const calStyle = { paddingTop: '55px' }
+        const calStyle = { paddingTop: '55px', paddingLeft: '100px' }
         return (
             <div>
-                <Grid style={divStyle} container stackable centered columns={2}>
+                <Grid style={divStyle} container>
+                    <Grid.Row columns={2}>
                         <Grid.Column>
-                        <AddEvent />
-                        <ExportCal />
+                            <AddEvent />
                         </Grid.Column>
-                    <Grid.Column style={calStyle} >
-                            <Calendar
-                                onChange={this.onChange}
-                                value={this.state.date}
-                            />
+                        <Grid.Column style={calStyle}>
+                            <Segment.Group>
+                            <Segment>
+                                <Calendar
+                                    onChange={this.onChange}
+                                    value={this.state.date}
+                                 />
+                            </Segment>
+                            <Segment>
+                                <ExportCal/>
+                                </Segment>
+                                </Segment.Group>
                         </Grid.Column>
+                    </Grid.Row>
                 </Grid>
             </div>
         );
