@@ -53,26 +53,26 @@ Calendar directs user on what day it is. The idea was to highlight days of event
 
 Here is an example of two successful submissions of events after going through a few test cases. We will use these as examples for the export and import features.
 
-![test1](images/test01)
+![test01](images/test01)
 
-![test2](images/test02)
+![test02](images/test02)
 
 #### Export
 
 The .ics file from the collection of events.
 
-![icsfile](images/exportics)
+![exportics](images/exportics)
 
 #### Import
 
 Importing the .ics file into google calendar.
 
-![import](images/importics)
+![importics](images/importics)
 
 The import is now displayed in the calendar.
 
-![calendar1](images/imported01)
-![calendar2](images/imported02)
+![imported01](images/imported01)
+![imported02](images/imported02)
 
 ## Developers Guide
 
