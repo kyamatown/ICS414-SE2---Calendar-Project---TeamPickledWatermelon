@@ -47,31 +47,32 @@ With all the functionality we have so far, file successfully imports to google c
 
 Calendar directs user on what day it is. The idea was to highlight days of events but we did not get to that feature yet as there were other priorities. We are able to export multiple events.
 
-![UI](images/UI)
+![UI](images/placesautocomplete)
 
 #### Creating Events
 
 Here is an example of two successful submissions of events after going through a few test cases. We will use these as examples for the export and import features.
 
-![test1](images/test1)
+![test1](images/test01)
 
-![test2](images/test2)
+![test2](images/test02)
 
 #### Export
 
 The .ics file from the collection of events.
 
-![icsfile](images/icsfile)
+![icsfile](images/exportics)
 
 #### Import
 
 Importing the .ics file into google calendar.
 
-![import](images/import)
+![import](images/importics)
 
 The import is now displayed in the calendar.
 
-![calendar](images/CalendarExample)
+![calendar1](images/imported01)
+![calendar2](images/imported02)
 
 ## Developers Guide
 
