@@ -24,11 +24,26 @@ class CalenderPage extends React.Component {
                         <AddEvent />
                         <ExportCal />
                         </Grid.Column>
+<<<<<<< Updated upstream
                     <Grid.Column style={calStyle} >
                             <Calendar
                                 onChange={this.onChange}
                                 value={this.state.date}
                             />
+=======
+                        <Grid.Column style={calStyle}>
+                            <Segment.Group>
+                                <Segment>
+                                    <Calendar
+                                        onChange={this.onChange}
+                                        value={this.state.date}
+                                    />
+                                </Segment>
+                                <Segment>
+                                    <ExportCal/>
+                                </Segment>
+                            </Segment.Group>
+>>>>>>> Stashed changes
                         </Grid.Column>
                 </Grid>
             </div>

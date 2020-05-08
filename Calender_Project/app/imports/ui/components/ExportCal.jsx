@@ -85,15 +85,18 @@ class ExportCal extends React.Component {
     };
 
     render() {
-        const calStyle = { paddingTop: '55px' }
         return (
             <Grid container centered>
-                <Button basic onClick={this.exportICS.bind(this)}>Export Calendar</Button>
-                <Button basic onClick={this.deleteMongo.bind(this)}>TESTING: DELETE COLLECTION</Button>
+                <Button basic onClick={this.exportICS.bind(this)}>Export Calendar</Button>  
             </Grid>
         )
     }
 }
+
+//Testing Feature - Delete Data from Collection to clear out junk while testing ics file format features
+//To use add under <Button basic onClick> in the render function
+//REMOVE BEFORE GOING TO PRODUCTION
+//<Button basic onClick={this.deleteMongo.bind(this)}>TESTING: DELETE COLLECTION</Button>
 
 ExportCal.propTypes = {
     calevents: PropTypes.array.isRequired,

@@ -8,6 +8,13 @@ import { Meteor } from 'meteor/meteor';
 import DatePicker from 'react-datepicker/es';
 import 'react-datepicker/dist/react-datepicker.css';
 
+<<<<<<< Updated upstream
+=======
+//Variables used to expose data from react-google-places-autocomplete
+var selectedLoc = [];
+var curLat = '';
+var curLon = '';
+>>>>>>> Stashed changes
 /** Renders the Page for adding a document. */
 class AddEvent extends React.Component {
 
@@ -34,7 +41,28 @@ class AddEvent extends React.Component {
         });
     };
 
+<<<<<<< Updated upstream
+=======
+    //Expose Location Data Object returned by react-google-places-autocomplete
+    //Use exposed location data to find latitude and longitude of selected location
+    onPlaceSelected = (place) => {
+        selectedLoc = place;
+        //console.log(selectedLoc);
+        geocodeByAddress(selectedLoc.description).then(results => getLatLng(results[0]))
+            .then(({ lat, lng }) => this.setLatLon(lat, lng));
+    };
+
+    //Expose Latitude and Longitude from geocodeByAddress
+    setLatLon = (lat, lng) => {
+        curLat = lat;
+        curLon = lng;
+        //console.log({ curLat, curLon });
+    };
+
+    //Convert Date to ics format
+>>>>>>> Stashed changes
     convertDate = (date) => {
+        //finalDate is used as a return value
         let finalDate = [];
         const dateParts = date.toString().split(' ');
         const months = {
@@ -56,6 +84,7 @@ class AddEvent extends React.Component {
         return finalDate = dateParts[3] + months[dateParts[1]] + dateParts[2] + newTime;
     };
 
+    //Date-Time Validation Block
     dateValidation = (dateValid, stDate, enDate) => {
         const curDate = new Date();
         const cDate = curDate.toString().split(' ');
@@ -87,7 +116,7 @@ class AddEvent extends React.Component {
         }
         if (months[cDate[1]] > months[sDate[1]] || months[cDate[1]] > months[eDate[1]]) {
             swal('Error', 'Invalid Date', 'error');
-            console.log('Checking CurMonth');
+            //console.log('Checking CurMonth');
             return dateValid = false;
         }
         if (cDate[2] > sDate[2] || cDate[2] > eDate[2]) {
@@ -107,7 +136,7 @@ class AddEvent extends React.Component {
         }
         if (months[eDate[1]] < months[sDate[1]]) {
             swal('Error', 'Invalid Date', 'error');
-            console.log('Checking Start and End Month');
+            //console.log('Checking Start and End Month');
             return dateValid = false;
         }
         if (eDate[2] < sDate[2]) {
@@ -136,17 +165,29 @@ class AddEvent extends React.Component {
     /** On submit, insert the data. */
     submit(data) {
         // eslint-disable-next-line prefer-const
+<<<<<<< Updated upstream
         const { Summary, CLASS, Description, Location, TRANSP, priority } = data;
+=======
+        //Basic Schema data handled by React-Uniforms
+        const { Summary, CLASS, Description, TRANSP, priority } = data;
+        //Setting owner of events
+>>>>>>> Stashed changes
         const owner = Meteor.user().username;
+        const organizer = owner;
+        //Attendees
+        let attendee = data.attendee;
+        //Date handling
+        //Not handled by React-Uniforms
+        //Manually Get from Datepicker
+        //Process and add manually
         const Start_Date = this.state.startDate;
         const End_Date = this.state.endDate;
         const timeStamp = new Date();
-        const organizer = owner;
-        let attendee = data.attendee;
         let dateValid = false;
         let StartDate = [];
         let EndDate = [];
         let Created = [];
+<<<<<<< Updated upstream
 
 
         attendee = attendee.split(' ');
@@ -154,7 +195,19 @@ class AddEvent extends React.Component {
         dateValid = this.dateValidation(dateValid, Start_Date, End_Date);
         console.log(dateValid);
 
+=======
+        //Validated entered Date-Times
+        dateValid = this.dateValidation(dateValid, Start_Date, End_Date);
 
+        //Location and GEO Data Handling
+        //Does not use React-Uniforms
+        //Manually get from react-google-places-autocomplete
+        //Process then add manually
+        let Location = selectedLoc.description;
+        let geo = curLat + ';' + curLon;
+>>>>>>> Stashed changes
+
+        //Only add to schema if dateValid is true
         if (dateValid) {
             StartDate = this.convertDate(Start_Date);
             EndDate = this.convertDate(End_Date);
@@ -212,6 +265,7 @@ class AddEvent extends React.Component {
                                         timeCaption="End Time"
                                         dateFormat="MM/dd/yyyy h:mm aa"
                                     />
+<<<<<<< Updated upstream
                                 </div>
                             </Form.Group>
                             <TextField name='Description' />
@@ -257,6 +311,79 @@ class AddEvent extends React.Component {
                         </Segment>
                     </AutoForm>
                 </Grid.Column>
+=======
+                                    <TextField name='attendee' label='Attendee(s)' style={labelStyle} />
+                                    <Form.Group>
+                                        <div>
+                                            <label style={{ fontWeight: 'bold' }}>Start Date</label>
+                                        </div>
+                                        <DatePicker
+                                            name='StartDate'
+                                            selected={this.state.startDate}
+                                            onChange={this.handleStartChange}
+                                            showTimeSelect
+                                            timeFormat="HH:mm"
+                                            timeIntervals={15}
+                                            timeCaption="Start Time"
+                                            dateFormat="MM/dd/yyyy h:mm aa"
+                                        />
+                                        <div>
+                                            <label style={{ fontWeight: 'bold' }}>End Date</label>
+                                        </div>
+                                        <DatePicker
+                                            name='EndDate'
+                                            selected={this.state.endDate}
+                                            onChange={this.handleEndChange}
+                                            showTimeSelect
+                                            timeFormat="HH:mm"
+                                            timeIntervals={15}
+                                            timeCaption="End Time"
+                                            dateFormat="MM/dd/yyyy h:mm aa"
+                                        />
+                                    </Form.Group>
+                                    <div>
+                                        <SelectField
+                                            name='TRANSP'
+                                            label='Transparency'
+                                            options={[
+                                                { label: 'Busy', value: 'OPAQUE' },
+                                                { label: 'Free', value: 'TRANSPARENT' },
+                                            ]}
+                                        />
+                                    </div>
+                                    <div>
+                                        <SelectField
+                                            name='CLASS'
+                                            label='Class'
+                                            options={[
+                                                { label: 'Public', value: 'PUBLIC' },
+                                                { label: 'Private', value: 'PRIVATE' },
+                                                { label: 'Confidential', value: 'CONFIDENTIAL' },
+                                            ]}
+                                        />
+                                    </div>
+                                    <div>
+                                        <SelectField
+                                            name='priority'
+                                            label='Priority'
+                                            options={[
+                                                { label: 'None', value: 0 },
+                                                { label: 'High', value: 1 },
+                                                { label: 'Medium', value: 5 },
+                                                { label: 'Low', value: 9 },
+                                            ]}
+                                        />
+                                    </div>
+                                </Segment>
+                                <Segment>
+                                    <SubmitField value='submit' />
+                                    <ErrorsField />
+                                </Segment>
+                            </AutoForm>
+                        </Segment.Group>
+                    </Grid.Column>
+                </Grid.Row>
+>>>>>>> Stashed changes
             </Grid>
         );
     }
