@@ -78,7 +78,7 @@ class AddEvent extends React.Component {
             Dec: '12',
         };
         const splitTime = dateParts[4].split(':');
-        const newTime = `T${splitTime[0]}${splitTime[1]}${splitTime[2]}Z`;
+        const newTime = 'T' + splitTime[0] + splitTime[1] +splitTime[2];
         return finalDate = dateParts[3] + months[dateParts[1]] + dateParts[2] + newTime;
     };
 
