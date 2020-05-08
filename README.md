@@ -63,5 +63,6 @@ npm install react-calendar
 ```
 Google Maps Places API
 ```
+npm instal --save react-google-places-autocomplete
 ```
 
