@@ -1,6 +1,83 @@
 # TeamPickledWatermelon
 
-### Installation
+## Table of Contents
+
+* [Overview](#Overview)
+* [User Guide](#User-Guide)
+* [Developer Guide](#Developer-Guide)
+* [Contributors](#Contributors)
+
+#### Repository link:
+
+* [TeamPickledWatermelon](https://github.com/johnbigornia/TeamPickledWatermelon)
+
+## Milestone Links
+
+* [Week7](https://github.com/johnbigornia/TeamPickledWatermelon/projects/1)
+* [Week9](https://github.com/johnbigornia/TeamPickledWatermelon/projects/3)
+* [Week13](https://github.com/johnbigornia/TeamPickledWatermelon/projects/4)
+* [Final Delivery](https://github.com/johnbigornia/TeamPickledWatermelon/projects/5)
+
+## Overview
+
+This is a team assignment in ICS414 to create an application variation of calendaring. The requirements will require RFC 5545 and 7986 format. The project also entails the export feature using the same RFC Format to a .ics file.
+
+## Functionality checklist:
+- [x] Version (section 3.7.4 of RFC 5545)
+- [x] Classification (3.8.1.3). Note this is a way of users designating events as
+- [x] public (default), private, or confidential.
+- [x] Geographic Position (3.8.1.6)
+- [x] Location (3.8.1.7) Note the difference between geo position and location
+- [x] Priority (3.8.1.9)
+- [x] Summary (3.8.1.12)
+- [x] DTSTART (3.8.2.4)
+- [x] DTEND (3.8.2.2)
+- [ ] Time zone identifier (3.8.3.1)-See Note
+- [x] RSVP (3.2.17)
+- [x] Sent-by (3.2.18)
+- [x] Resources (3.8.1.10)
+
+With all the functionality we have so far, file successfully imports to google calendar. 
+
+**Note**: Timezone is currently in Microsoft Docs format X-WR, and hardcoded to Hawaii/Aleutian time. Had trouble with importing exported file to other calendars in TZID format. Future updates can fix this and add automated Timezones based on user location.
+
+## User Guide
+
+#### Current UI
+
+Calendar directs user on what day it is. The idea was to highlight days of events but we did not get to that feature yet as there were other priorities. We are able to export multiple events.
+
+![UI1](images/newui.png)
+![UI2](images/placesautocomplete.png)
+
+#### Creating Events
+
+Here is an example of two successful submissions of events after going through a few test cases. We will use these as examples for the export and import features. When entering a location, autocomplete will show the top five matches to what the user is typing. The user must select the result they want if they want to commit a location and coordinates to the event listing. Leaving a typed only input will not register a location. Online events can be made by typing in Online and not selecting an event. This will leave location blank with no GEO entry. Online events with GEO attributed to the user's location will be added later.
+
+![test01](images/test01.png)
+
+![test02](images/test02.png)
+
+#### Export
+
+The .ics file from the collection of events.
+
+![exportics](images/exportics.png)
+
+#### Import
+
+Importing the .ics file into google calendar.
+
+![importedics](images/importedics.png)
+
+The import is now displayed in the calendar.
+
+![imported01](images/imported01.png)
+![imported02](images/imported02.png)
+
+## Developers Guide
+
+#### Installation
 The first thing you will need to is install <a href="https://www.meteor.com/install">Meteor</a>. 
 
 Clone or download the project to your local system to any desired directory. 
@@ -55,14 +132,27 @@ I20200304-16:16:23.452(-10)?   Adding: Boogie Board (admin@foo.com)
 
 You will see the website running at <a href="localhost:3000">localhost:3000</a> 
 
-### Other Dependencies:
+#### Other Dependencies:
 
+uniforms
+```
+meteor npm install --save uniforms
+```
 react-calendar
 ```
-npm install react-calendar
+meteor npm install --save react-calendar
+```
+react-datepicker
+```
+meteor npm install --save react-datepicker
 ```
 Google Maps Places API
 ```
-npm instal --save react-google-places-autocomplete
+meteor npm install --save react-google-places-autocomplete
 ```
+
+## Contributors
+
+* [Kenneth Yamaguchi](https://kyamagucuhm.github.io/)
+* [John Bigornia](https://johnbigornia.github.io/)
 
