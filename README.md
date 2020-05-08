@@ -32,12 +32,13 @@ This is a team assignment in ICS414 to create an application variation of calend
 - [x] Summary (3.8.1.12)
 - [x] DTSTART (3.8.2.4)
 - [x] DTEND (3.8.2.2)
-- [ ] Time zone identifier (3.8.3.1)
+- [ ] Time zone identifier (3.8.3.1)-See Note
 - [x] RSVP (3.2.17)
 - [x] Sent-by (3.2.18)
 - [x] Resources (3.8.1.10)
 
 With all the functionality we have so far, file successfully imports to google calendar. 
+**Note**: Timezone is currently in Microsoft Docs format X-WR, and hardcoded to Hawaii/Aleutian time. Had trouble with importing exported file to other calendars in TZID format. Future updates can fix this and add automated Timezones based on user location.
 
 ## User Guide
 
@@ -130,13 +131,21 @@ You will see the website running at <a href="localhost:3000">localhost:3000</a>
 
 #### Other Dependencies:
 
+uniforms
+```
+meteor npm install --save uniforms
+```
 react-calendar
 ```
-npm install react-calendar
+meteor npm install --save react-calendar
+```
+react-datepicker
+```
+meteor npm install --save react-datepicker
 ```
 Google Maps Places API
 ```
-npm install --save react-google-places-autocomplete
+meteor npm install --save react-google-places-autocomplete
 ```
 
 ## Contributors
