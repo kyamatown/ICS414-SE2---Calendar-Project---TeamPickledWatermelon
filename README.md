@@ -38,6 +38,7 @@ This is a team assignment in ICS414 to create an application variation of calend
 - [x] Resources (3.8.1.10)
 
 With all the functionality we have so far, file successfully imports to google calendar. 
+
 **Note**: Timezone is currently in Microsoft Docs format X-WR, and hardcoded to Hawaii/Aleutian time. Had trouble with importing exported file to other calendars in TZID format. Future updates can fix this and add automated Timezones based on user location.
 
 ## User Guide
