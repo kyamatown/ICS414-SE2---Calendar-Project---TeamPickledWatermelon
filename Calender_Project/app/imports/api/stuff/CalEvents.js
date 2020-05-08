@@ -31,7 +31,9 @@ const CalEventSchema = new SimpleSchema({
         type: String,
         optional: true,
     },
-    attendee: [String],
+    attendee: {
+        type: String,
+    },
     organizer: {
         type: String,
         optional: true,
@@ -46,7 +48,7 @@ const CalEventSchema = new SimpleSchema({
     },
     Location: {
         type: String,
-        optional: false,
+        optional: true,
     },
     TRANSP: {
         type: String,
@@ -63,6 +65,10 @@ const CalEventSchema = new SimpleSchema({
         optional: true,
         allowedValues: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
         defaultValue: 0,
+    },
+    geo: {
+        type: String,
+        optional: true,
     },
 }, { tracker: Tracker });
 

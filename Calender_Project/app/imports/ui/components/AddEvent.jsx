@@ -7,14 +7,15 @@ import 'uniforms-bridge-simple-schema-2';
 import { Meteor } from 'meteor/meteor';
 import DatePicker from 'react-datepicker/es';
 import 'react-datepicker/dist/react-datepicker.css';
+//Package npm react-google-places-autocomplete
+import GooglePlacesAutocomplete from 'react-google-places-autocomplete';
+import 'react-google-places-autocomplete/dist/index.min.css';
+import { geocodeByAddress, getLatLng } from 'react-google-places-autocomplete';
 
-<<<<<<< Updated upstream
-=======
 //Variables used to expose data from react-google-places-autocomplete
 var selectedLoc = [];
 var curLat = '';
 var curLon = '';
->>>>>>> Stashed changes
 /** Renders the Page for adding a document. */
 class AddEvent extends React.Component {
 
@@ -41,8 +42,6 @@ class AddEvent extends React.Component {
         });
     };
 
-<<<<<<< Updated upstream
-=======
     //Expose Location Data Object returned by react-google-places-autocomplete
     //Use exposed location data to find latitude and longitude of selected location
     onPlaceSelected = (place) => {
@@ -60,7 +59,6 @@ class AddEvent extends React.Component {
     };
 
     //Convert Date to ics format
->>>>>>> Stashed changes
     convertDate = (date) => {
         //finalDate is used as a return value
         let finalDate = [];
@@ -111,7 +109,7 @@ class AddEvent extends React.Component {
         // Then check against each other
         if (cDate[3] > sDate[3] || cDate[3] > eDate[3]) {
             swal('Error', 'Invalid Date', 'error');
-            console.log('Checking CurYear');
+            //console.log('Checking CurYear');
             return dateValid = false;
         }
         if (months[cDate[1]] > months[sDate[1]] || months[cDate[1]] > months[eDate[1]]) {
@@ -121,17 +119,17 @@ class AddEvent extends React.Component {
         }
         if (cDate[2] > sDate[2] || cDate[2] > eDate[2]) {
             swal('Error', 'Invalid Date', 'error');
-            console.log('Checking CurDay');
+            //console.log('Checking CurDay');
             return dateValid = false;
         }
         if ((cDate[2] == sDate[2] || cDate[2] == eDate[2]) && (cTime[0] >= sTime[0] || cTime[0] >= eTime[0])) {
             swal('Error', 'Invalid Time', 'error');
-            console.log('Checking CurTime Hours');
+            //console.log('Checking CurTime Hours');
             return dateValid = false;
         }
         if (eDate[3] < sDate[3]) {
             swal('Error', 'Invalid Date', 'error');
-            console.log('Checking Start and End Year');
+            //console.log('Checking Start and End Year');
             return dateValid = false;
         }
         if (months[eDate[1]] < months[sDate[1]]) {
@@ -141,23 +139,23 @@ class AddEvent extends React.Component {
         }
         if (eDate[2] < sDate[2]) {
             swal('Error', 'Invalid Date', 'error');
-            console.log('Checking Start and End Day');
+            //console.log('Checking Start and End Day');
             return dateValid = false;
         }
         if ((eDate[2] == sDate[2]) && (eTime[0] < sTime[0])) {
             swal('Error', 'Invalid Time', 'error');
-            console.log(sTime[0]);
-            console.log(eTime[0]);
-            console.log('Checking Start and End Time Hours');
+            //console.log(sTime[0]);
+            //console.log(eTime[0]);
+            //console.log('Checking Start and End Time Hours');
             return dateValid = false;
         }
         if ((eTime[0] == sTime[0]) && (eTime[1] < sTime[1])) {
             swal('Error', 'Invalid Time', 'error');
-            console.log('Checking Start and End Time Minutes');
+            //console.log('Checking Start and End Time Minutes');
             return dateValid = false;
         }
 
-            console.log('Date Valid');
+            //console.log('Date Valid');
             return dateValid = true;
 
     }
@@ -165,13 +163,9 @@ class AddEvent extends React.Component {
     /** On submit, insert the data. */
     submit(data) {
         // eslint-disable-next-line prefer-const
-<<<<<<< Updated upstream
-        const { Summary, CLASS, Description, Location, TRANSP, priority } = data;
-=======
         //Basic Schema data handled by React-Uniforms
         const { Summary, CLASS, Description, TRANSP, priority } = data;
         //Setting owner of events
->>>>>>> Stashed changes
         const owner = Meteor.user().username;
         const organizer = owner;
         //Attendees
@@ -187,15 +181,6 @@ class AddEvent extends React.Component {
         let StartDate = [];
         let EndDate = [];
         let Created = [];
-<<<<<<< Updated upstream
-
-
-        attendee = attendee.split(' ');
-
-        dateValid = this.dateValidation(dateValid, Start_Date, End_Date);
-        console.log(dateValid);
-
-=======
         //Validated entered Date-Times
         dateValid = this.dateValidation(dateValid, Start_Date, End_Date);
 
@@ -205,14 +190,13 @@ class AddEvent extends React.Component {
         //Process then add manually
         let Location = selectedLoc.description;
         let geo = curLat + ';' + curLon;
->>>>>>> Stashed changes
 
         //Only add to schema if dateValid is true
         if (dateValid) {
             StartDate = this.convertDate(Start_Date);
             EndDate = this.convertDate(End_Date);
             Created = this.convertDate(timeStamp);
-            CalEvent.insert({ Summary, Created, StartDate, EndDate, CLASS, owner, Description, Location, TRANSP, priority, organizer, attendee },
+            CalEvent.insert({ Summary, Created, StartDate, EndDate, CLASS, owner, Description, Location, geo, TRANSP, priority, organizer, attendee },
                 (error) => {
                     if (error) {
                         swal('Error', error.message, 'error');
@@ -226,92 +210,31 @@ class AddEvent extends React.Component {
 
     /** Render the form. Use Uniforms: https://github.com/vazco/uniforms */
     render() {
-        const sbsStyle = { paddingLeft: '8px' };
-        const inSBSStyle = { width: '160px' };
-        const inSBSStyle2 = { paddingLeft: '8px', width: '170px' };
+        const labelStyle = { paddingTop: '10px' };
         return (
-            <Grid container centered>
-                <Grid.Column>
-                    <Header as="h2" textAlign="center">Add Event</Header>
-                    <AutoForm
-                        schema={CalEventSchema}
-                        ref={(ref) => { this.formRef = ref; }}
-                        onSubmit={data => this.submit(data)}>
-                        <Segment>
-                            <TextField name='Summary' />
-                            <Form.Group style={sbsStyle}>
-                                <div style={inSBSStyle}>
-                                    <label style={{ fontWeight: 'bold' }}>Start Date</label>
-                                    <DatePicker
-                                        name='StartDate'
-                                        selected={this.state.startDate}
-                                        onChange={this.handleStartChange}
-                                        showTimeSelect
-                                        timeFormat="HH:mm"
-                                        timeIntervals={15}
-                                        timeCaption="Start Time"
-                                        dateFormat="MM/dd/yyyy h:mm aa"
+            <Grid>
+                <Grid.Row columns={1}>
+                    <Grid.Column>
+                        <Header as='h2'>Add Event</Header>
+                    </Grid.Column>
+                </Grid.Row>
+                <Grid.Row columns='equal' width={'auto'}>
+                    <Grid.Column>
+                        <Segment.Group>
+                            <AutoForm
+                                schema={CalEventSchema}
+                                ref={(ref) => { this.formRef = ref; }}
+                                onSubmit={data => this.submit(data)}>
+                            <Segment>
+                                    <TextField name='Summary' />
+                                    <TextField name='Description' />
+                                    <div>
+                                        <label style={{ fontWeight: 'bold' }}>Location</label>
+                                    </div>
+                                    <GooglePlacesAutocomplete
+                                        apiKey='AIzaSyBxY0OanPbFWvb71ef89bv6v9fMKPFTIHs'
+                                        onSelect={this.onPlaceSelected}
                                     />
-                                </div>
-                                <div style={inSBSStyle2}>
-                                    <label style={{ fontWeight: 'bold' }}>End Date</label>
-                                    <DatePicker
-                                        name='EndDate'
-                                        selected={this.state.endDate}
-                                        onChange={this.handleEndChange}
-                                        showTimeSelect
-                                        timeFormat="HH:mm"
-                                        timeIntervals={15}
-                                        timeCaption="End Time"
-                                        dateFormat="MM/dd/yyyy h:mm aa"
-                                    />
-<<<<<<< Updated upstream
-                                </div>
-                            </Form.Group>
-                            <TextField name='Description' />
-                            <TextField name='Location' />
-                            <TextField name='attendee' label='Attendee(s)'/>
-                            <Form.Group>
-                                <div>
-                                <SelectField
-                                    name='TRANSP'
-                                    label='Transparency'
-                                    options={[
-                                        { label: 'Busy', value: 'OPAQUE' },
-                                        { label: 'Free', value: 'TRANSPARENT' },
-                                    ]}
-                                />
-                                </div>
-                                <div style={inSBSStyle2}>
-                                <SelectField
-                                    name='CLASS'
-                                    label='Class'
-                                    options={[
-                                        { label: 'Public', value: 'PUBLIC' },
-                                        { label: 'Private', value: 'PRIVATE' },
-                                        { label: 'Confidential', value: 'CONFIDENTIAL' },
-                                    ]}
-                                />
-                                </div>
-                            </Form.Group>
-                            <Form.Group>
-                            <SelectField
-                                name='priority'
-                                label='Priority'
-                                options={[
-                                    { label: 'None', value: 0 },
-                                    { label: 'High', value: 1 },
-                                    { label: 'Medium', value: 5 },
-                                    { label: 'Low', value: 9 },
-                                ]}
-                            />
-                            </Form.Group>
-                            <SubmitField value='submit' />
-                            <ErrorsField/>
-                        </Segment>
-                    </AutoForm>
-                </Grid.Column>
-=======
                                     <TextField name='attendee' label='Attendee(s)' style={labelStyle} />
                                     <Form.Group>
                                         <div>
@@ -383,7 +306,6 @@ class AddEvent extends React.Component {
                         </Segment.Group>
                     </Grid.Column>
                 </Grid.Row>
->>>>>>> Stashed changes
             </Grid>
         );
     }
